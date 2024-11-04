@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/dingodb/dingo-libexpr/actions/workflows/build.yml/badge.svg)](https://github.com/dingodb/dingo-libexpr/actions/workflows/build.yml)
 
-This project is the coprocessor part of [Dingo Expression](https://github.com/dingodb/dingo-expr), written in C++. The project is made standalone to be easily integrated into other C++ projects.
+This project is the coprocessor part of [Dingo Expression](https://github.com/dingodb/dingo-expr), written in C++. The project is made standalone to be easily integrated into other C++ projects. GUOXU
 
 ## Getting Started
 
