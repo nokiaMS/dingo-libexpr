@@ -15,33 +15,53 @@
 #ifndef _EXPR_CALC_RELATIONAL_H_
 #define _EXPR_CALC_RELATIONAL_H_
 
+
 namespace dingodb::expr::calc {
 
+/*
+ *定义了关系操作模板函数，需要这些类型支持 <,<=,>,>=,==,!=。
+ * EQ.
+ */
 template <typename T>
 bool Eq(T v0, T v1) {
   return v0 == v1;
 }
 
+/*
+ *定义了GE.
+ */
 template <typename T>
 bool Ge(T v0, T v1) {
   return v0 >= v1;
 }
 
+/*
+ *定义了GT。
+ */
 template <typename T>
 bool Gt(T v0, T v1) {
   return v0 > v1;
 }
 
+/*
+ *定义了le.
+ */
 template <typename T>
 bool Le(T v0, T v1) {
   return v0 <= v1;
 }
 
+/*
+ *定义了lt。
+ */
 template <typename T>
 bool Lt(T v0, T v1) {
   return v0 < v1;
 }
 
+/*
+ *定义了ne。
+ */
 template <typename T>
 bool Ne(T v0, T v1) {
   return v0 != v1;

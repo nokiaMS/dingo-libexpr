@@ -54,6 +54,9 @@ static const Byte VAR_I_DOUBLE  = VAR_I_PREFIX | TYPE_DOUBLE;
 static const Byte VAR_I_DECIMAL = VAR_I_PREFIX | TYPE_DECIMAL;
 static const Byte VAR_I_STRING  = VAR_I_PREFIX | TYPE_STRING;
 
+/*
+ * 定义了pos, neg, add, sub, mul, div, mod操作的类型值。
+ */
 static const Byte POS = 0x81;
 static const Byte NEG = 0x82;
 static const Byte ADD = 0x83;
@@ -62,6 +65,9 @@ static const Byte MUL = 0x85;
 static const Byte DIV = 0x86;
 static const Byte MOD = 0x87;
 
+/*
+ * 定义了eq, ge, gt, le, lt, ne操作的类型值。
+ */
 static const Byte EQ = 0x91;
 static const Byte GE = 0x92;
 static const Byte GT = 0x93;
@@ -69,30 +75,52 @@ static const Byte LE = 0x94;
 static const Byte LT = 0x95;
 static const Byte NE = 0x96;
 
+/*
+ * 定义了is_null, is_true, is_false操作的类型值。
+ */
 static const Byte IS_NULL  = 0xA1;
 static const Byte IS_TRUE  = 0xA2;
 static const Byte IS_FALSE = 0xA3;
 
+/*
+ * 定义了min, max, abs, abs_c操作的类型值。
+ */
 static const Byte MIN   = 0xB1;
 static const Byte MAX   = 0xB2;
 static const Byte ABS   = 0xB3;
 static const Byte ABS_C = 0xB4;
 
+/*
+ * 定义了note, and, or的类型值。
+ */
 static const Byte NOT = 0x51;
 static const Byte AND = 0x52;
 static const Byte OR  = 0x53;
 
+/*
+ * 定义了cast, cast_c, fun操作的类型值。
+ */
 static const Byte CAST   = 0xF0;
 static const Byte CAST_C = 0xFC;
 static const Byte FUN    = 0xF1;
 
+/*
+ * 定义了eoe的操作类型值。
+ */
 static const Byte EOE = 0x00;
 
+/*
+ * 给定一个字节序列，然后进行解码。
+ */
 const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
+  //解析前首先清理内存存储结构，以处理新的表达式编码数据。
   Release();
+
   bool successful = true;
   const Byte *p   = code;
   const Byte *b;
+
+  //执行操作符解析操作。
   while (successful && p < code + len) {
     b = p;
     switch (*p) {
@@ -120,65 +148,66 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       ++p;
       Add(OP_NULL[TYPE_STRING]);
       break;
-    case CONST_INT32: {
+    case CONST_INT32: {   //解析int32整型常量，生成ConstOperator操作符。
       ++p;
       int32_t v;
+      //解析int32类型值。
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT32>(v));
       break;
     }
-    case CONST_INT64: {
+    case CONST_INT64: {   //解析int64整型常量，生成ConstOperator操作符。
       ++p;
       int64_t v;
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT64>(v));
       break;
     }
-    case CONST_BOOL:
+    case CONST_BOOL:    //解析bool常量，生成ConstBoolOperator操作符。
       ++p;
       Add(OP_CONST_TRUE);
       break;
-    case CONST_FLOAT: {
+    case CONST_FLOAT: {   //解析float常量，生成ConstOperator操作符。
       ++p;
       float v;
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_FLOAT>(v));
       break;
     }
-    case CONST_DOUBLE: {
+    case CONST_DOUBLE: {   //解析double常量，生成ConstOperator操作符。
       ++p;
       double v;
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_DOUBLE>(v));
       break;
     }
-    case CONST_DECIMAL: {
+    case CONST_DECIMAL: {   //解析double常量，生成ConstOperator操作符。
       ++p;
       // TODO
       break;
     }
-    case CONST_STRING: {
+    case CONST_STRING: {    //解析string常量，生成ConstOperator操作符。
       ++p;
       String v;
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_STRING>(v));
       break;
     }
-    case CONST_N_INT32: {
+    case CONST_N_INT32: {    //解析int32常量，生成ConstOperator操作符。
       ++p;
       int32_t v;
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT32>(-v));
       break;
     }
-    case CONST_N_INT64: {
+    case CONST_N_INT64: {    //解析int64常量，生成ConstOperator操作符。
       ++p;
       int64_t v;
       p = DecodeValue(v, p);
       AddRelease(new ConstOperator<TYPE_INT64>(-v));
       break;
     }
-    case CONST_N_BOOL:
+    case CONST_N_BOOL:    //解析bool常量，生成ConstOperator操作符。
       ++p;
       Add(OP_CONST_FALSE);
       break;
@@ -311,12 +340,12 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       successful = AddOperatorByType(OP_IS_FALSE, *p);
       ++p;
       break;
-    case MIN:
+    case MIN:   //解析min操作符。   （ type1: min操作编码 + type2: 参数类型）
       ++p;
       successful = AddOperatorByType(OP_MIN, *p);
       ++p;
       break;
-    case MAX:
+    case MAX:   //解析max操作符。   （type1: max操作编码 + type2: 参数类型）
       ++p;
       successful = AddOperatorByType(OP_MAX, *p);
       ++p;
@@ -358,21 +387,24 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       successful = AddFunOperator(*p);
       ++p;
       break;
-    case EOE:
+    case EOE:   //发现是eoe，表示指令结束。
       ++p;
       goto eoe;
-    default:
+    default:    //此处说明指令解码失败。
       successful = false;
       break;
     }
   }
-eoe:
+eoe:    //处理eoe情况，如果成功返回当前指针位置，否则抛出异常。
   if (successful) {
     return p;
   }
   throw UnknownCode(b, len - (b - code));
 }
 
+/*
+ * 通过类型添加操作符。
+ */
 bool OperatorVector::AddOperatorByType(const Operator *const ops[], Byte type) {
   const auto *op = ops[type];
   if (op != nullptr) {

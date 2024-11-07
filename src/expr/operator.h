@@ -22,23 +22,38 @@
 
 namespace dingodb::expr {
 
+/*
+ * 定义了Operator对象，即操作符，代表了下推下来的各种操作。
+ */
 class Operator {
  public:
+  //虚拟析构函数，采用默认方式。
   virtual ~Operator() = default;
 
+  //纯虚函数，传递操作操作数栈来构造操作符对象。
   virtual void operator()(OperandStack &stack) const = 0;
 
+  //纯虚函数，需要派生类实现。
   virtual Byte GetType() const = 0;
 };
 
+/*
+ * OperatorBase派生了Operator抽象类。
+ */
 template <Byte R>
 class OperatorBase : public Operator {
  public:
+  /*
+   * 获得操作符的类型。
+   */
   Byte GetType() const override {
     return R;
   }
 };
 
+/*
+ * 定义了NullOperator.
+ */
 template <Byte R>
 class NullOperator : public OperatorBase<R> {
  public:
@@ -47,9 +62,13 @@ class NullOperator : public OperatorBase<R> {
   }
 };
 
+/*
+ * ConstOperator操作符。
+ */
 template <Byte R>
 class ConstOperator : public OperatorBase<R> {
  public:
+  //构造函数。
   ConstOperator(TypeOf<R> value) : m_value(value) {
   }
 
@@ -58,12 +77,17 @@ class ConstOperator : public OperatorBase<R> {
   }
 
  private:
+  //存储常量值。
   TypeOf<R> m_value;
 };
 
+/*
+ * ConstBoolOperator操作符。
+ */
 template <bool V>
 class ConstBoolOperator : public OperatorBase<TYPE_BOOL> {
  public:
+  //默认构造函数。
   ConstBoolOperator() = default;
 
   void operator()(OperandStack &stack) const override {
@@ -118,6 +142,9 @@ class UnarySpecialOperator : public OperatorBase<TYPE_BOOL> {
   }
 };
 
+/*
+ * 二元操作运算符。
+ */
 template <Byte R, Byte T0, Byte T1, TypeOf<R> (*Calc)(TypeOf<T0>, TypeOf<T1>)>
 class BinaryOperator : public OperatorBase<R> {
  public:
@@ -150,6 +177,9 @@ class BinaryOperatorV2 : public OperatorBase<R> {
   }
 };
 
+/*
+ * 二元数学运算操作符定义。
+ */
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>, TypeOf<R>)>
 using BinaryArithmeticOperator = BinaryOperator<R, R, R, Calc>;
 

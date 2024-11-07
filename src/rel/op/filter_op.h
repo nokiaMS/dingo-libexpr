@@ -23,10 +23,15 @@ class Runner;
 
 namespace dingodb::rel::op {
 
+/*
+ * 过滤操作。
+ */
 class FilterOp : public RelOp {
  public:
+  //构造函数。
   FilterOp(const expr::Runner *filter);
 
+  //析构函数。
   ~FilterOp() override;
 
   const expr::Tuple *Put(const expr::Tuple *tuple) const override;

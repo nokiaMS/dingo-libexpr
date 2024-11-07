@@ -19,28 +19,43 @@
 
 namespace dingodb::expr::calc {
 
+/*
+ *实现了一些字符串函数。
+ */
+//实现了concat.
 String Concat(String v0, String v1);
 
+//实现了Lower.
 String Lower(String v);
 
+//实现了Upper
 String Upper(String v);
 
+//实现了Left
 String Left(String v0, int32_t v1);
 
+//实现了Right
 String Right(String v0, int32_t v1);
 
+//实现了Trim
 String Trim(String v);
 
+//实现了LTrim
 String LTrim(String v);
 
+//实现了RTrim
 String RTrim(String v);
 
+//实现了Substr
 String Substr(String v0, int32_t v1, int32_t v2);
 
+//实现了Substr
 String Substr(String v0, int32_t v1);
 
+//实现了Mid
 String Mid(String v0, int32_t v1, int32_t v2);
 
+//实现了Mid
 String Mid(String v0, int32_t v1);
 
 }  // namespace dingodb::expr::calc

@@ -21,13 +21,20 @@
 
 namespace dingodb::expr {
 
+/*
+ * 定义了Runner类，这个类是整个libexpr库的入口。
+ */
 class Runner {
  public:
+  //默认构造函数。
   Runner() = default;
 
+  //默认析构函数。
   virtual ~Runner() = default;
 
+  //给定一个字节序列及其长度，然后对这个字节序列解码获得对应的表达式树。
   const Byte *Decode(const Byte *code, size_t len) {
+    //直接调用m_operator_vector进行解析。
     return m_operator_vector.Decode(code, len);
   }
 
@@ -57,8 +64,10 @@ class Runner {
   Tuple *GetAll() const;
 
  private:
+  //存储表达式的操作数。
   mutable OperandStack m_operand_stack;
 
+  //存储表带的操作符序列。
   OperatorVector m_operator_vector;
 };
 

@@ -19,24 +19,42 @@
 
 namespace dingodb::expr::calc {
 
+/*
+ *定义了一些特殊函数。
+ *IsNull函数。
+ */
 template <typename T>
 bool IsNull(const Operand &v) {
   return v == nullptr;
 }
 
+/*
+ *定义了IsTrue函数。
+ */
 template <typename T>
 bool IsTrue(const Operand &v) {
   return v != nullptr && v.GetValue<T>();
 }
 
+/*
+ *定义了string的isTrue函数。
+ *string需要特殊处理。
+ */
 template <>
 bool IsTrue<String>(const Operand &v);
 
+/*
+ *定义了isFalse函数。
+ */
 template <typename T>
 bool IsFalse(const Operand &v) {
   return v != nullptr && !v.GetValue<T>();
 }
 
+/*
+ *定义了isFalse string函数。
+ *string不能用上面的模板函数，需要特殊处理。
+ */
 template <>
 bool IsFalse<String>(const Operand &v);
 

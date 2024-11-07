@@ -20,22 +20,35 @@
 
 namespace dingodb::expr::calc {
 
+/*
+ *定义了一些数学函数。
+ *返回两个字符串最小值。
+ */
 template <>
 String Min(String v0, String v1) {
   return std::min(*v0, *v1);
 }
 
+/*
+ *返回两个字符串最大值。
+ */
 template <>
 String Max(String v0, String v1) {
   return std::max(*v0, *v1);
 }
 
+/*
+ *返回一个int32的绝对值。
+ */
 template <>
 int32_t Abs(int32_t v) {
   static_assert(std::is_same_v<int32_t, int>, "`int32_t` must be an alias of `int`.");
   return abs(v);
 }
 
+/*
+ *返回一个int64的绝对值。
+ */
 template <>
 int64_t Abs(int64_t v) {
   static_assert(
@@ -47,16 +60,25 @@ int64_t Abs(int64_t v) {
   return llabs(v);
 }
 
+/*
+ *返回一个float的绝对值。
+ */
 template <>
 float Abs(float v) {
   return fabsf(v);
 }
 
+/*
+ *返回一个double的绝对值。
+ */
 template <>
 double Abs(double v) {
   return fabs(v);
 }
 
+/*
+ *带有溢出检查的abs函数，支持int32.
+ */
 template <>
 int32_t AbsCheck(int32_t v) {
   if (v == std::numeric_limits<int32_t>::min()) {
@@ -65,6 +87,9 @@ int32_t AbsCheck(int32_t v) {
   return abs(v);
 }
 
+/*
+ *带有溢出检查的abs函数，支持int64.
+ */
 template <>
 int64_t AbsCheck(int64_t v) {
   if (v == std::numeric_limits<int64_t>::min()) {

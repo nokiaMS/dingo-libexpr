@@ -22,16 +22,25 @@
 
 namespace dingodb::expr::calc {
 
+/*
+ *float转int32.
+ */
 template <>
 int32_t Cast(float v) {
   return lround(v);
 }
 
+/*
+ *double转int32.
+ */
 template <>
 int32_t Cast(double v) {
   return lround(v);
 }
 
+/*
+ *string转int32.
+ */
 template <>
 int32_t Cast(String v) {
   try {
@@ -41,16 +50,25 @@ int32_t Cast(String v) {
   }
 }
 
+/*
+ *float转int64.
+ */
 template <>
 int64_t Cast(float v) {
   return llround(v);
 }
 
+/*
+ *double转int64.
+ */
 template <>
 int64_t Cast(double v) {
   return llround(v);
 }
 
+/*
+ *string转int64.
+ */
 template <>
 int64_t Cast(String v) {
   try {
@@ -60,6 +78,9 @@ int64_t Cast(String v) {
   }
 }
 
+/*
+ *string转float.
+ */
 template <>
 float Cast(String v) {
   try {
@@ -69,6 +90,9 @@ float Cast(String v) {
   }
 }
 
+/*
+ *string转doule。
+ */
 template <>
 double Cast(String v) {
   try {
@@ -78,21 +102,33 @@ double Cast(String v) {
   }
 }
 
+/*
+ *int32转string。
+ */
 template <>
 String Cast(int32_t v) {
   return std::to_string(v);
 }
 
+/*
+ *int64转string。
+ */
 template <>
 String Cast(int64_t v) {
   return std::to_string(v);
 }
 
+/*
+ *bool转string。
+ */
 template <>
 String Cast(bool v) {
   return v ? "true" : "false";
 }
 
+/*
+ *T类型转换为string。
+ */
 template <typename T>
 static String CastF(T v) {
   // precision is 6 by default
@@ -107,16 +143,19 @@ static String CastF(T v) {
   return s;
 }
 
+//float转换为string。
 template <>
 String Cast(float v) {
   return CastF(v);
 }
 
+//double转换为string。
 template <>
 String Cast(double v) {
   return CastF(v);
 }
 
+//待溢出检查的转换，int64转换为int32.
 template <>
 int32_t CastCheck(int64_t v) {
   auto r = Cast<int32_t>(v);
@@ -134,6 +173,7 @@ static inline bool ErrorAcceptable(double a, double b) {
   return fabs(a - b) <= 0.5;
 }
 
+//带溢出检查的float转int32.
 template <>
 int32_t CastCheck(float v) {
   auto r = Cast<int32_t>(v);
@@ -143,6 +183,7 @@ int32_t CastCheck(float v) {
   throw ExceedsLimits<TYPE_INT32>();
 }
 
+//带溢出检查的double转int32>
 template <>
 int32_t CastCheck(double v) {
   auto r = Cast<int32_t>(v);
@@ -152,6 +193,7 @@ int32_t CastCheck(double v) {
   throw ExceedsLimits<TYPE_INT32>();
 }
 
+//带溢出检查的float转int64.
 template <>
 int64_t CastCheck(float v) {
   auto r = Cast<int64_t>(v);
@@ -161,6 +203,7 @@ int64_t CastCheck(float v) {
   throw ExceedsLimits<TYPE_INT64>();
 }
 
+//带溢出检查的double转int64.
 template <>
 int64_t CastCheck(double v) {
   auto r = Cast<int64_t>(v);

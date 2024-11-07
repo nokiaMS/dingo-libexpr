@@ -24,9 +24,12 @@ namespace dingodb::rel {
 
 class RelRunner {
  public:
+  //构造函数。
   RelRunner();
+  //析构函数。
   virtual ~RelRunner();
 
+  //解析关系操作对象。
   const expr::Byte *Decode(const expr::Byte *code, size_t len);
 
   const expr::Tuple *Put(const expr::Tuple *tuple) const;
@@ -34,8 +37,10 @@ class RelRunner {
   const expr::Tuple *Get() const;
 
  private:
+  //存储关系操作对象。
   RelOp *m_op;
 
+  //释放关系操作对象。
   void Release() {
     delete m_op;
     m_op = nullptr;

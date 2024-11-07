@@ -16,6 +16,9 @@
 
 namespace dingodb::expr {
 
+/*
+ * 给定类型值，返回对应的类型名称。
+ */
 const char *TypeName(Byte type) {
   switch (type) {
   case TYPE_INT32:

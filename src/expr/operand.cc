@@ -16,6 +16,9 @@
 
 namespace dingodb::expr {
 
+/*
+ * 实现了Operand类型的 << 操作。
+ */
 std::ostream &operator<<(std::ostream &os, const Operand &v) {
   if (std::holds_alternative<int32_t>(v.m_data)) {
     os << std::get<int32_t>(v.m_data);
@@ -38,6 +41,9 @@ std::ostream &operator<<(std::ostream &os, const Operand &v) {
 }
 namespace any_optional_data_adaptor {
 
+/*
+ * 实现了string类型转换为Operand的转换函数。
+ */
 template <>
 std::any FromOperand<String::ValueType>(const Operand &v) {
   std::optional<String::ValueType> opt;

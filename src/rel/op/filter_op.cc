@@ -19,17 +19,31 @@
 
 namespace dingodb::rel::op {
 
+/*
+ * 构造函数。
+ */
 FilterOp::FilterOp(const expr::Runner *filter) : m_filter(filter) {
 }
 
+/*
+ * 析构函数。
+ */
 FilterOp::~FilterOp() {
   delete m_filter;
 }
 
+/*
+ * 把一个tuple输入给算子，然后进行计算。
+ */
 const expr::Tuple *FilterOp::Put(const expr::Tuple *tuple) const {
+  //tuple绑定。
   m_filter->BindTuple(tuple);
+  //进行算子运算。
   m_filter->Run();
+  //获得计算结果。
   auto v = m_filter->Get();
+
+  //如果满足条件返回tuple，否则返回空指针。
   if (expr::calc::IsTrue<bool>(v)) {
     return tuple;
   }

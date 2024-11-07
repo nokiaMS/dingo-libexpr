@@ -19,55 +19,89 @@
 
 namespace dingodb::expr::calc {
 
+/*
+ *转换函数模版。
+ */
 template <typename D, typename S>
 D Cast(S v) {
   return (D)v;
 }
 
+//float转int32.
 template <>
 int32_t Cast(float v);
+
+//double转int32.
 template <>
 int32_t Cast(double v);
+
+//string转int32.
 template <>
 int32_t Cast(String v);
 
+//float转int64.
 template <>
 int64_t Cast(float v);
+
+//double转int64.
 template <>
 int64_t Cast(double v);
+
+//string转int64.
 template <>
 int64_t Cast(String v);
 
+//string转float.
 template <>
 float Cast(String v);
 
+//string转double.
 template <>
 double Cast(String v);
 
+//int32转string。
 template <>
 String Cast(int32_t v);
+
+//int64转string。
 template <>
 String Cast(int64_t v);
+
+//bool转string。
 template <>
 String Cast(bool v);
+
+//float转string。
 template <>
 String Cast(float v);
+
+//double转string。
 template <>
 String Cast(double v);
 
+//S类型转换为D类型。
 template <typename D, typename S>
 D CastCheck(S v) {
   return Cast<D>(v);
 }
 
+//int64转int32.
 template <>
 int32_t CastCheck(int64_t v);
+
+//float转int32.
 template <>
 int32_t CastCheck(float v);
+
+//double转int32.
 template <>
 int32_t CastCheck(double v);
+
+//float转int64.
 template <>
 int64_t CastCheck(float v);
+
+//double转int64.
 template <>
 int64_t CastCheck(double v);
 

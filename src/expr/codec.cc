@@ -24,6 +24,9 @@
 
 namespace dingodb::expr {
 
+/*
+ * 解析int32值。
+ */
 template <typename T>
 static const Byte *DecodeVarint(T &value, const Byte *data) {
   value = 0;
@@ -37,8 +40,12 @@ static const Byte *DecodeVarint(T &value, const Byte *data) {
   return p + 1;
 }
 
+/*
+ * int32值的解析。
+ */
 template <>
 const Byte *DecodeValue(int &value, const Byte *data) {
+  //解析int值。
   return DecodeVarint(value, data);
 }
 

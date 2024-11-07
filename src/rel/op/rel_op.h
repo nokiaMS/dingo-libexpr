@@ -19,9 +19,14 @@
 
 namespace dingodb::rel {
 
+/*
+ * 定义了关系操作对象。
+ */
 class RelOp {
  public:
+  //默认构造函数。
   RelOp() = default;
+  //默认析构函数。
   virtual ~RelOp() = default;
 
   virtual const expr::Tuple *Put(const expr::Tuple *tuple) const = 0;

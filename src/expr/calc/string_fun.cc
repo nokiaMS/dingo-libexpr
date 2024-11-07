@@ -18,6 +18,7 @@
 
 namespace dingodb::expr::calc {
 
+//字符串concat函数。
 String Concat(String v0, String v1) {
   if (!v0->empty()) {
     if (!v1->empty()) {
@@ -28,18 +29,21 @@ String Concat(String v0, String v1) {
   return v1;
 }
 
+//字符串lower。
 String Lower(String v) {
   std::string str(v->length(), '\0');
   std::transform(v->cbegin(), v->cend(), str.begin(), [](unsigned char ch) { return std::tolower(ch); });
   return str;
 }
 
+//字符串upper。
 String Upper(String v) {
   std::string str(v->length(), '\0');
   std::transform(v->cbegin(), v->cend(), str.begin(), [](unsigned char ch) { return std::toupper(ch); });
   return str;
 }
 
+//字符串left函数。
 String Left(String v0, int32_t v1) {
   if (!v0->empty()) {
     if (v1 > 0) {
@@ -54,6 +58,7 @@ String Left(String v0, int32_t v1) {
   return v0;
 }
 
+//字符串right函数。
 String Right(String v0, int32_t v1) {
   if (!v0->empty()) {
     if (v1 > 0) {
@@ -68,26 +73,31 @@ String Right(String v0, int32_t v1) {
   return v0;
 }
 
+//字符串isspace函数。
 static bool IsSpace(unsigned char ch) {
   return std::isspace(ch);
 }
 
+//字符串trim函数。
 String Trim(String v) {
   auto s = std::find_if_not(v->cbegin(), v->cend(), IsSpace);
   auto e = std::find_if_not(v->crbegin(), v->crend(), IsSpace);
   return v->substr(s - v->cbegin(), (v->crend() - e) - (s - v->cbegin()));
 }
 
+//字符串ltrim函数。
 String LTrim(String v) {
   auto s = std::find_if_not(v->cbegin(), v->cend(), IsSpace);
   return v->substr(s - v->cbegin());
 }
 
+//字符串rtrim函数。
 String RTrim(String v) {
   auto e = std::find_if_not(v->crbegin(), v->crend(), IsSpace);
   return v->substr(0, v->crend() - e);
 }
 
+//字符串substr函数。
 String Substr(String v0, int32_t v1, int32_t v2) {
   int len = v0->length();
   if (v1 < 0) {
@@ -108,6 +118,7 @@ String Substr(String v0, int32_t v1, int32_t v2) {
   }
 }
 
+//字符串substr函数。
 String Substr(String v0, int32_t v1) {
   int len = v0->length();
   if (v1 < 0) {
@@ -120,6 +131,7 @@ String Substr(String v0, int32_t v1) {
   }
 }
 
+//字符串mid函数。
 String Mid(String v0, int32_t v1, int32_t v2) {
   if (v2 > 0) {
     int len = v0->length();
@@ -139,6 +151,7 @@ String Mid(String v0, int32_t v1, int32_t v2) {
   return String();
 }
 
+//字符串mid函数。
 String Mid(String v0, int32_t v1) {
   int len = v0->length();
   if (0 < v1 && v1 <= len) {

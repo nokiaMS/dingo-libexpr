@@ -35,7 +35,13 @@ const Operator *const OP_NULL[] = {
     [TYPE_STRING]  = new NullOperator<TYPE_STRING>,
 };
 
+/*
+ * 定义了值为true的bool操作符。
+ */
 const Operator *const OP_CONST_TRUE  = new ConstBoolOperator<true>;
+/*
+ * 定义了值为false的bool操作符。
+ */
 const Operator *const OP_CONST_FALSE = new ConstBoolOperator<false>;
 
 /* clang-format off */
@@ -346,6 +352,9 @@ const Operator *const OP_IS_FALSE[] = {
     [TYPE_STRING]  = new UnarySpecialOperator<calc::IsFalse<String>>,
 };
 
+/*
+ * 定义了各种类型的min操作符。
+ */
 const Operator *const OP_MIN[] = {
     [TYPE_NULL]    = nullptr,
     [TYPE_INT32]   = new BinaryArithmeticOperator<TYPE_INT32, calc::Min>,
@@ -357,6 +366,9 @@ const Operator *const OP_MIN[] = {
     [TYPE_STRING]  = new BinaryArithmeticOperator<TYPE_STRING, calc::Min>,
 };
 
+/*
+ * 定义了各种类型的max操作符。
+ */
 const Operator *const OP_MAX[] = {
     [TYPE_NULL]    = nullptr,
     [TYPE_INT32]   = new BinaryArithmeticOperator<TYPE_INT32, calc::Max>,

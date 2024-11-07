@@ -16,11 +16,17 @@
 
 namespace dingodb::expr::calc {
 
+/*
+ *实现了string类型的isTrue。
+ */
 template <>
 bool IsTrue<String>([[maybe_unused]] const Operand &v) {
   return false;
 }
 
+/*
+ *实现了string类型的isFalse。
+ */
 template <>
 bool IsFalse<String>(const Operand &v) {
   return v != nullptr;

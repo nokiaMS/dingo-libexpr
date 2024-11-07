@@ -26,6 +26,9 @@
 
 namespace dingodb::rel {
 
+/*
+ * 定义了几种关系操作：过滤操作，投影操作，分组聚合，非分聚合。
+ */
 static const expr::Byte FILTER_OP = 0x71;
 static const expr::Byte PROJECT_OP = 0x72;
 static const expr::Byte GROUPED_AGGREGATE = 0x73;
@@ -34,42 +37,60 @@ static const expr::Byte UNGROUPED_AGGREGATE = 0x74;
 static const expr::Byte ARRAY_PREFIX = 0x60;
 static const expr::Byte ARRAY_INT32 = ARRAY_PREFIX | expr::TYPE_INT32;
 
+/*
+ * 定义了几种聚合操作的编码值： count, count_all, sum, max, min
+ */
 static const expr::Byte AGG_COUNT_ALL = 0x10;
 static const expr::Byte AGG_COUNT = 0x10;
 static const expr::Byte AGG_SUM = 0x20;
 static const expr::Byte AGG_MAX = 0x30;
 static const expr::Byte AGG_MIN = 0x40;
 
+/*
+ * 构造函数。
+ */
 RelRunner::RelRunner() : m_op(nullptr) {
 }
 
+/*
+ * 析构函数。
+ */
 RelRunner::~RelRunner() {
   Release();
 }
 
+/*
+ * 解析关系操作对象。
+ * code: 编码后的关系操作序列，len：编码的字节长度。
+ */
 const expr::Byte *RelRunner::Decode(const expr::Byte *code, size_t len) {
+  //在解析前清空RelRunner对象。
   Release();
+
   bool successful = true;
   const expr::Byte *p = code;
   const expr::Byte *b;
+
   while (successful && p < code + len) {
     b = p;
     switch (*p) {
-    case FILTER_OP: {
+    case FILTER_OP: {   //处理过滤操作。
       ++p;
       auto *filter = new expr::Runner();
       p = filter->Decode(p, code + len - p);
       AppendOp(new op::FilterOp(filter));
       break;
     }
-    case PROJECT_OP: {
+    case PROJECT_OP: {  //处理投影操作。
       ++p;
+      //创建Runner对象。
       auto *projects = new expr::Runner();
+      //执行解析。
       p = projects->Decode(p, code + len - p);
       AppendOp(new op::ProjectOp(projects));
       break;
     }
-    case GROUPED_AGGREGATE: {
+    case GROUPED_AGGREGATE: {   //处理分组聚合操作。
       ++p;
       assert(*p == ARRAY_INT32);
       ++p;
@@ -81,7 +102,7 @@ const expr::Byte *RelRunner::Decode(const expr::Byte *code, size_t len) {
       AppendOp(new op::GroupedAggOp(groupe_indices, count, aggs));
       break;
     }
-    case UNGROUPED_AGGREGATE: {
+    case UNGROUPED_AGGREGATE: {   //处理非分组聚合操作。
       ++p;
       std::vector<const op::Agg *> *aggs;
       p = expr::DecodeVector(aggs, p, code + len - p);

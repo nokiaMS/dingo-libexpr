@@ -17,33 +17,56 @@
 
 #include "../operand.h"
 
+/*
+ *定义了一些数学计算函数的模版。
+ *如果想使用这些模版，那么要求参数类型需要支持对应的操作符：+,-,*,/,%。
+ */
 namespace dingodb::expr::calc {
 
+/*
+ *取正数。
+ */
 template <typename T>
 T Pos(T v) {
   return v;
 }
 
+/*
+ *取负数。
+ */
 template <typename T>
 T Neg(T v) {
   return -v;
 }
 
+/*
+ *加法。
+ */
 template <typename T>
 T Add(T v0, T v1) {
   return v0 + v1;
 }
 
+/*
+ *减法。
+ */
 template <typename T>
 T Sub(T v0, T v1) {
   return v0 - v1;
 }
 
+/*
+ *乘法。
+ */
 template <typename T>
 T Mul(T v0, T v1) {
   return v0 * v1;
 }
 
+/*
+ *除法。
+ *如果除数等于0则返回空指针，否则计算。
+ */
 template <typename T>
 Operand Div(T v0, T v1) {
   if (v1 != 0) {
@@ -52,6 +75,10 @@ Operand Div(T v0, T v1) {
   return nullptr;
 }
 
+/*
+ *取模运算。
+ *如果模数等于0则返回空指针，否则计算。
+ */
 template <typename T>
 Operand Mod(T v0, T v1) {
   if (v1 != 0) {

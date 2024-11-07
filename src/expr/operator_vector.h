@@ -21,10 +21,19 @@
 
 namespace dingodb::expr {
 
+/*
+ * 操作符数组。
+ */
 class OperatorVector {
  public:
+  /*
+   * 构造函数。
+   */
   OperatorVector() = default;
 
+  /*
+   * 析构函数。
+   */
   virtual ~OperatorVector() {
     Release();
   }
@@ -35,29 +44,37 @@ class OperatorVector {
     return m_vector.back()->GetType();
   }
 
+  //获得迭代器开始位置。
   auto begin() const  // NOLINT(readability-identifier-naming)
   {
     return m_vector.cbegin();
   }
 
+  //获得迭代器结束位置。
   auto end() const  // NOLINT(readability-identifier-naming)
   {
     return m_vector.cend();
   }
 
  private:
+  //存储操作符序列。
   std::vector<const Operator *> m_vector;
   std::vector<const Operator *> m_to_release;
 
+  //添加一个操作符。
   void Add(const Operator *op) {
     m_vector.push_back(op);
   }
 
+  //把解析后的操作符添加到内部队列中。
   void AddRelease(const Operator *op) {
     m_vector.push_back(op);
     m_to_release.push_back(op);
   }
 
+  /*
+   * 释放操作符数组中的各操作符。
+   */
   void Release() {
     for (const auto *op : m_to_release) {
       delete op;
