@@ -14,11 +14,14 @@
 
 #include "casting.h"
 
+#include <chrono>
 #include <cmath>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 
 #include "../exception.h"
+#include "../types.h"
 
 namespace dingodb::expr::calc {
 
@@ -115,6 +118,63 @@ String Cast(float v) {
 template <>
 String Cast(double v) {
   return CastF(v);
+}
+
+/*
+ * String to date.
+ */
+template <>
+Date DateCast(String v) {
+  struct tm t = {}, t1 = {};
+
+  strptime((*v).c_str(), "%Y-%m-%d", &t);
+  strptime("1970-01-01", "%Y-%m-%d", &t1);
+
+  return (std::mktime(&t) - std::mktime(&t1)) * MILLISECONDS_IN_SECOND;
+}
+
+/*
+ * long to date.
+ */
+template <>
+Date DateCast(int64_t v) {
+  //To milliseconds.
+  return v * MILLISECONDS_IN_SECOND;
+}
+
+/*
+ * int to date.
+ */
+template <>
+Date DateCast(int32_t v) {
+  //To milliseconds.
+  return v * MILLISECONDS_IN_SECOND;
+}
+
+/*
+ * String to date with check.
+ */
+template <>
+Date DateCastCheck(String v) {
+  return 0;
+}
+
+/*
+ * long to date with check.
+ */
+template <>
+Date DateCastCheck(int64_t v) {
+  //To milliseconds.
+  return v * MILLISECONDS_IN_SECOND;
+}
+
+/*
+ * int to date with check.
+ */
+template <>
+Date DateCastCheck(int32_t v) {
+  //To milliseconds.
+  return v * MILLISECONDS_IN_SECOND;
 }
 
 template <>

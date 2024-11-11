@@ -44,6 +44,75 @@ INSTANTIATE_TEST_SUITE_P(
     ConstExpr,
     ExprTest,
     testing::Values(
+        /*
+         * date:
+         *    test target: DATE(LONG(1))
+         *      byte1: 0x10 | 0x02 (CONST | TYPE_LONG)
+         *      byte2: 0x01 (the date value)
+         *      byte3: 0xFO (CAST)
+         *      byte4: 0x80 | 0x02 (TYPE_DATE | TYPE_LONG)
+         */
+        std::make_tuple("1201F082", nullptr, 1000L),                            // Should be 1000 millionseconds.
+
+        /*
+         * date:
+         *      byte1: 0x10 | 0x07 (CONST | TYPE_STRING)
+         *      byte2: 0x0a (The string length)
+         *      byte3 ~ byte12: (The string: '1970-01-01' : 0x31 0x39 0x37 0x30 0x2d 0x30 0x31 0x2d 0x30 0x31)
+         *      byte13: 0xF0 (CAST)
+         *      byte14: 0x80 | 0x07 (TYPE_DATE | TYPE_STRING)
+         */
+        std::make_tuple("170A313937302D30312D3031F087", nullptr, 0L),           // 0 for '1970-01-01'
+
+        /*
+         * date:
+         *      byte1: 0x10 | 0x07 (CONST | TYPE_STRING)
+         *      byte2: 0x0a (The string length)
+         *      byte3 ~ byte12: (The string: '1970-01-02' : 0x31 0x39 0x37 0x30 0x2d 0x30 0x31 0x2d 0x30 0x32)
+         *      byte13: 0xF0 (CAST)
+         *      byte14: 0x80 | 0x07 (TYPE_DATE | TYPE_STRING)
+         */
+        std::make_tuple("170A313937302D30312D3032F087", nullptr, 86400000L),           // 0 for '1970-01-02'
+
+        /*
+         * date:
+         *      170A313938302D30312D3331F087: "CONST | TYPE_STRING <str_len> 1980-01-31 CAST TYPE_DATE | TYPE_STRING"
+         *      170A313938302D30322D3031F087: "CONST | TYPE_STRING <str_len> 1980-02-01 CAST TYPE_DATE | TYPE_STRING"
+         *      92080000: "GE DATE \0 \0"
+         */
+        std::make_tuple("170A313938302D30312D3331F087170A313938302D30322D3031F08792080000", nullptr, false),
+
+        /* date:
+         *     11: CONST | TYPE_INT32
+         *     00: value
+         *     FO81: CAST | TYPE_DATE | TYPE_STRING
+         *     A108: IS_NULL TYPE_DATE
+         */
+        std::make_tuple("1100F081A108", nullptr, false),
+
+        /*
+         * date:
+         *    1100: CONST | TYPE_INT32 | value
+         *    F081: CAST | TYPE_DATE | TYPE_STRING
+         *    A208: IS_TRUE | TYPE_DATE
+         */
+        std::make_tuple("1100F081A208", nullptr, true),
+
+        /*
+         * date:
+         *    1100: CONST | TYPE_INT32 | value
+         *    F081: CAST | TYPE_DATE | TYPE_STRING
+         *    A308: IS_FALSE | TYPE_DATE
+         */
+        std::make_tuple("1100F081A308", nullptr, false),
+
+        /*
+         * date:
+         *    08 NULL | TYPE_DATE
+         *    A1 IS_NULL
+         *    08 TYPE_DATE
+         */
+        std::make_tuple("08A108", nullptr, true),
         std::make_tuple("1101", nullptr, 1),                                    // 1
         std::make_tuple("2101", nullptr, -1),                                   // -1
         std::make_tuple("119601", nullptr, 150),                                // 150
@@ -94,3 +163,4 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple("3701", &tuple4, "aBc"),                     // t1
         std::make_tuple("370037019307", &tuple4, true)               // t0 < t1
         ));
+

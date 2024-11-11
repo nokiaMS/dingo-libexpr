@@ -17,8 +17,13 @@
 
 #include "../types.h"
 
+#define MILLISECONDS_IN_SECOND 1000
+
 namespace dingodb::expr::calc {
 
+/*
+ * casting template.
+ */
 template <typename D, typename S>
 D Cast(S v) {
   return (D)v;
@@ -55,6 +60,41 @@ String Cast(float v);
 template <>
 String Cast(double v);
 
+/*
+ * Date casting template.
+ */
+template <typename D, typename S>
+D DateCast(S v) {
+  return (D)v;
+}
+
+template <>
+Date DateCast(String v);
+
+template <>
+Date DateCast(int64_t v);
+
+template <>
+Date DateCast(int32_t v);
+
+/*
+ * Date casting template with check.
+ */
+template <typename D, typename S>
+D DateCastCheck(S v) {
+  return DateCast<D>(v);
+}
+
+template <>
+Date DateCastCheck(String v);
+template <>
+Date DateCastCheck(int64_t v);
+template <>
+Date DateCastCheck(int32_t v);
+
+/*
+ * casting template with check.
+ */
 template <typename D, typename S>
 D CastCheck(S v) {
   return Cast<D>(v);

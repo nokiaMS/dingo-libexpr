@@ -17,3 +17,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/expr/calc)
 add_executable(test_casting test_casting.cc)
 target_link_libraries(test_casting GTest::gtest_main ${EXPR_LIB_NAME})
 gtest_discover_tests(test_casting)
+
+add_executable(test_relational test_relational.cc)
+target_link_libraries(test_relational GTest::gtest_main ${EXPR_LIB_NAME})
+gtest_discover_tests(test_relational)

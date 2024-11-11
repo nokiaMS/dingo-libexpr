@@ -16,6 +16,9 @@
 
 namespace dingodb::expr {
 
+/*
+ * Get type name from type flag.
+ */
 const char *TypeName(Byte type) {
   switch (type) {
   case TYPE_INT32:
@@ -32,6 +35,8 @@ const char *TypeName(Byte type) {
     return "DECIMAL";
   case TYPE_STRING:
     return "STRING";
+  case TYPE_DATE:
+    return "DATE";
   default:
     return "UNKNOWN";
   }

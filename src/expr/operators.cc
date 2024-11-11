@@ -33,6 +33,7 @@ const Operator *const OP_NULL[] = {
     [TYPE_DOUBLE]  = new NullOperator<TYPE_DOUBLE>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new NullOperator<TYPE_STRING>,
+    [TYPE_DATE] = new NullOperator<TYPE_DATE>,  //NULL operator for date type.
 };
 
 const Operator *const OP_CONST_TRUE  = new ConstBoolOperator<true>;
@@ -40,7 +41,7 @@ const Operator *const OP_CONST_FALSE = new ConstBoolOperator<false>;
 
 /* clang-format off */
 const Operator *const OP_CAST[][TYPE_NUM] = {
-    [TYPE_NULL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    [TYPE_NULL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
     [TYPE_INT32] = {
         [TYPE_NULL]    = nullptr,
         [TYPE_INT32]   = nullptr,
@@ -50,6 +51,7 @@ const Operator *const OP_CAST[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastOperator<TYPE_INT32, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastOperator<TYPE_INT32, TYPE_STRING>,
+        [TYPE_DATE]  = new CastOperator<TYPE_INT32, TYPE_DATE>,
     },
     [TYPE_INT64] = {
         [TYPE_NULL]    = nullptr,
@@ -60,6 +62,7 @@ const Operator *const OP_CAST[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastOperator<TYPE_INT64, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastOperator<TYPE_INT64, TYPE_STRING>,
+        [TYPE_DATE]    = new CastOperator<TYPE_INT64, TYPE_DATE>,
     },
     [TYPE_BOOL] = {
         [TYPE_NULL]    = nullptr,
@@ -70,6 +73,7 @@ const Operator *const OP_CAST[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastOperator<TYPE_BOOL, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = nullptr,
+        [TYPE_DATE]  = new CastOperator<TYPE_BOOL, TYPE_DATE>,
     },
     [TYPE_FLOAT] = {
         [TYPE_NULL]    = nullptr,
@@ -80,6 +84,7 @@ const Operator *const OP_CAST[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastOperator<TYPE_FLOAT, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastOperator<TYPE_FLOAT, TYPE_STRING>,
+        [TYPE_DATE]    = new CastOperator<TYPE_FLOAT, TYPE_DATE>,
     },
     [TYPE_DOUBLE] = {
         [TYPE_NULL]    = nullptr,
@@ -90,8 +95,9 @@ const Operator *const OP_CAST[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = nullptr,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastOperator<TYPE_DOUBLE, TYPE_STRING>,
+        [TYPE_DATE]    = new CastOperator<TYPE_DOUBLE, TYPE_DATE>,
     },
-    [TYPE_DECIMAL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    [TYPE_DECIMAL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
     [TYPE_STRING] = {
         [TYPE_NULL]    = nullptr,
         [TYPE_INT32]   = new CastOperator<TYPE_STRING, TYPE_INT32>,
@@ -101,11 +107,23 @@ const Operator *const OP_CAST[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastOperator<TYPE_STRING, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = nullptr,
+        [TYPE_DATE]    = new CastOperator<TYPE_STRING, TYPE_DATE>,
+    },
+    [TYPE_DATE] = {   //Actually Date is int64_t.
+        [TYPE_NULL]    = nullptr,
+        [TYPE_INT32]   = new DateCastOperator<TYPE_INT32>,
+        [TYPE_INT64]   = new DateCastOperator<TYPE_INT64>,
+        [TYPE_BOOL]    = nullptr,
+        [TYPE_FLOAT]   = nullptr,
+        [TYPE_DOUBLE]  = nullptr,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING]  = new DateCastOperator<TYPE_STRING>,
+        [TYPE_DATE]    = nullptr,
     },
 };
 
 const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
-    [TYPE_NULL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
+    [TYPE_NULL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
     [TYPE_INT32] = {
         [TYPE_NULL]    = nullptr,
         [TYPE_INT32]   = nullptr,
@@ -115,6 +133,7 @@ const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastCheckOperator<TYPE_INT32, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastCheckOperator<TYPE_INT32, TYPE_STRING>,
+        [TYPE_DATE]    = new CastCheckOperator<TYPE_INT32, TYPE_DATE>,
     },
     [TYPE_INT64] = {
         [TYPE_NULL]    = nullptr,
@@ -125,6 +144,7 @@ const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastCheckOperator<TYPE_INT64, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastCheckOperator<TYPE_INT64, TYPE_STRING>,
+        [TYPE_DATE]    = new CastCheckOperator<TYPE_INT64, TYPE_DATE>,
     },
     [TYPE_BOOL] = {
         [TYPE_NULL]    = nullptr,
@@ -135,6 +155,7 @@ const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastCheckOperator<TYPE_BOOL, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = nullptr,
+        [TYPE_DATE]    = new CastCheckOperator<TYPE_BOOL, TYPE_DATE>,
     },
     [TYPE_FLOAT] = {
         [TYPE_NULL]    = nullptr,
@@ -145,6 +166,7 @@ const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastCheckOperator<TYPE_FLOAT, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastCheckOperator<TYPE_FLOAT, TYPE_STRING>,
+        [TYPE_DATE]    = new CastCheckOperator<TYPE_FLOAT, TYPE_DATE>,
     },
     [TYPE_DOUBLE] = {
         [TYPE_NULL]    = nullptr,
@@ -155,6 +177,7 @@ const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = nullptr,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = new CastCheckOperator<TYPE_DOUBLE, TYPE_STRING>,
+        [TYPE_DATE]    = new CastCheckOperator<TYPE_DOUBLE, TYPE_DATE>,
     },
     [TYPE_DECIMAL] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr},
     [TYPE_STRING] = {
@@ -166,6 +189,18 @@ const Operator *const OP_CAST_CHECK[][TYPE_NUM] = {
         [TYPE_DOUBLE]  = new CastCheckOperator<TYPE_STRING, TYPE_DOUBLE>,
         [TYPE_DECIMAL] = nullptr,
         [TYPE_STRING]  = nullptr,
+        [TYPE_DATE]  = new CastCheckOperator<TYPE_STRING, TYPE_DATE>,
+    },
+    [TYPE_DATE] = {   //Actually Date is int64_t.
+        [TYPE_NULL]    = nullptr,
+        [TYPE_INT32]   = new DateCastCheckOperator<TYPE_INT32>,
+        [TYPE_INT64]   = new DateCastCheckOperator<TYPE_INT64>,
+        [TYPE_BOOL]    = nullptr,
+        [TYPE_FLOAT]   = nullptr,
+        [TYPE_DOUBLE]  = nullptr,
+        [TYPE_DECIMAL] = nullptr,
+        [TYPE_STRING]  = new DateCastCheckOperator<TYPE_STRING>,
+        [TYPE_DATE]    = nullptr,
     },
 };
 /* clang-format on */
@@ -179,6 +214,7 @@ const Operator *const OP_POS[] = {
     [TYPE_DOUBLE]  = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Pos>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = nullptr,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_NEG[] = {
@@ -190,6 +226,7 @@ const Operator *const OP_NEG[] = {
     [TYPE_DOUBLE]  = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Neg>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = nullptr,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_ADD[] = {
@@ -201,6 +238,7 @@ const Operator *const OP_ADD[] = {
     [TYPE_DOUBLE]  = new BinaryArithmeticOperator<TYPE_DOUBLE, calc::Add>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryArithmeticOperator<TYPE_STRING, calc::Add>,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_SUB[] = {
@@ -212,6 +250,7 @@ const Operator *const OP_SUB[] = {
     [TYPE_DOUBLE]  = new BinaryArithmeticOperator<TYPE_DOUBLE, calc::Sub>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryArithmeticOperator<TYPE_STRING, calc::Add>,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_MUL[] = {
@@ -223,6 +262,7 @@ const Operator *const OP_MUL[] = {
     [TYPE_DOUBLE]  = new BinaryArithmeticOperator<TYPE_DOUBLE, calc::Mul>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = nullptr,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_DIV[] = {
@@ -234,6 +274,7 @@ const Operator *const OP_DIV[] = {
     [TYPE_DOUBLE]  = new BinaryOperatorV2<TYPE_DOUBLE, TYPE_DOUBLE, TYPE_DOUBLE, calc::Div>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = nullptr,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_MOD[] = {
@@ -245,6 +286,7 @@ const Operator *const OP_MOD[] = {
     [TYPE_DOUBLE]  = nullptr,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = nullptr,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_EQ[] = {
@@ -256,6 +298,7 @@ const Operator *const OP_EQ[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Eq>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Eq>,
+    [TYPE_DATE] = new BinaryRelationOperator<TYPE_DATE, calc::Eq>,
 };
 
 const Operator *const OP_NE[] = {
@@ -267,6 +310,7 @@ const Operator *const OP_NE[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Ne>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Ne>,
+    [TYPE_DATE]  = new BinaryRelationOperator<TYPE_DATE, calc::Ne>,
 };
 
 const Operator *const OP_GT[] = {
@@ -278,6 +322,7 @@ const Operator *const OP_GT[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Gt>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Gt>,
+    [TYPE_DATE]  = new BinaryRelationOperator<TYPE_DATE, calc::Gt>,
 };
 
 const Operator *const OP_GE[] = {
@@ -289,6 +334,7 @@ const Operator *const OP_GE[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Ge>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Ge>,
+    [TYPE_DATE]  = new BinaryRelationOperator<TYPE_DATE, calc::Ge>,
 };
 
 const Operator *const OP_LT[] = {
@@ -300,6 +346,7 @@ const Operator *const OP_LT[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Lt>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Lt>,
+    [TYPE_DATE]  = new BinaryRelationOperator<TYPE_DATE, calc::Lt>,
 };
 
 const Operator *const OP_LE[] = {
@@ -311,6 +358,7 @@ const Operator *const OP_LE[] = {
     [TYPE_DOUBLE]  = new BinaryRelationOperator<TYPE_DOUBLE, calc::Le>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryRelationOperator<TYPE_STRING, calc::Le>,
+    [TYPE_DATE]  = new BinaryRelationOperator<TYPE_DATE, calc::Le>,
 };
 
 const Operator *const OP_IS_NULL[] = {
@@ -322,6 +370,7 @@ const Operator *const OP_IS_NULL[] = {
     [TYPE_DOUBLE]  = new UnarySpecialOperator<calc::IsNull<double>>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new UnarySpecialOperator<calc::IsNull<String>>,
+    [TYPE_DATE]  = new UnarySpecialOperator<calc::IsNull<Date>>,
 };
 
 const Operator *const OP_IS_TRUE[] = {
@@ -333,6 +382,7 @@ const Operator *const OP_IS_TRUE[] = {
     [TYPE_DOUBLE]  = new UnarySpecialOperator<calc::IsTrue<double>>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new UnarySpecialOperator<calc::IsTrue<String>>,
+    [TYPE_DATE]  = new UnarySpecialOperator<calc::DateIsTrue<Date>>,
 };
 
 const Operator *const OP_IS_FALSE[] = {
@@ -344,6 +394,7 @@ const Operator *const OP_IS_FALSE[] = {
     [TYPE_DOUBLE]  = new UnarySpecialOperator<calc::IsFalse<double>>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new UnarySpecialOperator<calc::IsFalse<String>>,
+    [TYPE_DATE]  = new UnarySpecialOperator<calc::DateIsFalse<Date>>,
 };
 
 const Operator *const OP_MIN[] = {
@@ -355,6 +406,7 @@ const Operator *const OP_MIN[] = {
     [TYPE_DOUBLE]  = new BinaryArithmeticOperator<TYPE_DOUBLE, calc::Min>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryArithmeticOperator<TYPE_STRING, calc::Min>,
+    [TYPE_DATE]  = new BinaryArithmeticOperator<TYPE_DATE, calc::Min>,
 };
 
 const Operator *const OP_MAX[] = {
@@ -366,6 +418,7 @@ const Operator *const OP_MAX[] = {
     [TYPE_DOUBLE]  = new BinaryArithmeticOperator<TYPE_DOUBLE, calc::Max>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = new BinaryArithmeticOperator<TYPE_STRING, calc::Max>,
+    [TYPE_DATE]  = new BinaryArithmeticOperator<TYPE_DATE, calc::Max>,
 };
 
 const Operator *const OP_ABS[] = {
@@ -377,6 +430,7 @@ const Operator *const OP_ABS[] = {
     [TYPE_DOUBLE]  = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::Abs>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = nullptr,
+    [TYPE_DATE]    = nullptr,
 };
 
 const Operator *const OP_ABS_CHECK[] = {
@@ -388,6 +442,7 @@ const Operator *const OP_ABS_CHECK[] = {
     [TYPE_DOUBLE]  = new UnaryArithmeticOperator<TYPE_DOUBLE, calc::AbsCheck>,
     [TYPE_DECIMAL] = nullptr,
     [TYPE_STRING]  = nullptr,
+    [TYPE_DATE]  = nullptr,
 };
 
 const Operator *const OP_NOT = new NotOperator();

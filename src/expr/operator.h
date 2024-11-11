@@ -99,11 +99,41 @@ class UnaryOperator : public OperatorBase<R> {
   }
 };
 
+/*
+ * Date casting temlate.
+ */
+template <Byte T, TypeOf<TYPE_DATE> (*Calc)(TypeOf<T>)>
+class DateCastOperatorTpl : public UnaryOperator<TYPE_DATE, T, Calc> {
+public:
+  void operator()(OperandStack &stack) const override {
+    auto v = stack.Get();
+    stack.Pop();
+    if (v != nullptr) {
+      //Value to millionseconds.
+      stack.Push<TypeOf<TYPE_DATE>>(Calc(v.GetValue<TypeOf<T>>()));
+    } else {
+      stack.Push<TypeOf<TYPE_DATE>>();
+    }
+  }
+};
+
 template <Byte R, Byte T>
 using CastOperator = UnaryOperator<R, T, calc::Cast>;
 
 template <Byte R, Byte T>
 using CastCheckOperator = UnaryOperator<R, T, calc::CastCheck>;
+
+/*
+ * Cast types to date.
+ */
+template <Byte T>
+using DateCastOperator = DateCastOperatorTpl<T, calc::DateCast>;
+
+/*
+ * Cast types to date with check.
+ */
+template <Byte T>
+using DateCastCheckOperator = DateCastOperatorTpl<T, calc::DateCastCheck>;
 
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>)>
 using UnaryArithmeticOperator = UnaryOperator<R, R, Calc>;

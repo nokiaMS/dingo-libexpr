@@ -33,8 +33,19 @@ template <>
 bool IsTrue<String>(const Operand &v);
 
 template <typename T>
+bool DateIsTrue(const Operand &v) {
+  return v != nullptr;
+}
+
+template <typename T>
 bool IsFalse(const Operand &v) {
   return v != nullptr && !v.GetValue<T>();
+}
+
+template <typename T>
+bool DateIsFalse(const Operand &v) {
+  //Always false, as date(0) is true and date(...) also be true.
+  return false;
 }
 
 template <>

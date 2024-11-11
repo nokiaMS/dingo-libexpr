@@ -30,6 +30,7 @@ static const Byte NULL_FLOAT   = NULL_PREFIX | TYPE_FLOAT;
 static const Byte NULL_DOUBLE  = NULL_PREFIX | TYPE_DOUBLE;
 static const Byte NULL_DECIMAL = NULL_PREFIX | TYPE_DECIMAL;
 static const Byte NULL_STRING  = NULL_PREFIX | TYPE_STRING;
+static const Byte NULL_DATE  = NULL_PREFIX | TYPE_DATE;   //NULL code for date type.
 
 static const Byte CONST_PREFIX  = 0x10;
 static const Byte CONST_INT32   = CONST_PREFIX | TYPE_INT32;
@@ -39,11 +40,13 @@ static const Byte CONST_FLOAT   = CONST_PREFIX | TYPE_FLOAT;
 static const Byte CONST_DOUBLE  = CONST_PREFIX | TYPE_DOUBLE;
 static const Byte CONST_DECIMAL = CONST_PREFIX | TYPE_DECIMAL;
 static const Byte CONST_STRING  = CONST_PREFIX | TYPE_STRING;
+static const Byte CONST_DATE  = CONST_PREFIX | TYPE_DATE;   //Const code for date type.
 
 static const Byte CONST_N_PREFIX = 0x20;
 static const Byte CONST_N_INT32  = CONST_N_PREFIX | TYPE_INT32;
 static const Byte CONST_N_INT64  = CONST_N_PREFIX | TYPE_INT64;
 static const Byte CONST_N_BOOL   = CONST_N_PREFIX | TYPE_BOOL;
+static const Byte CONST_N_DATE  = CONST_N_PREFIX | TYPE_DATE;
 
 static const Byte VAR_I_PREFIX  = 0x30;
 static const Byte VAR_I_INT32   = VAR_I_PREFIX | TYPE_INT32;
@@ -53,6 +56,7 @@ static const Byte VAR_I_FLOAT   = VAR_I_PREFIX | TYPE_FLOAT;
 static const Byte VAR_I_DOUBLE  = VAR_I_PREFIX | TYPE_DOUBLE;
 static const Byte VAR_I_DECIMAL = VAR_I_PREFIX | TYPE_DECIMAL;
 static const Byte VAR_I_STRING  = VAR_I_PREFIX | TYPE_STRING;
+static const Byte VAR_I_DATE  = VAR_I_PREFIX | TYPE_DATE;   //Val code for date variable.
 
 static const Byte POS = 0x81;
 static const Byte NEG = 0x82;
@@ -120,6 +124,12 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       ++p;
       Add(OP_NULL[TYPE_STRING]);
       break;
+    case NULL_DATE: {
+      //Decode null operator for date type.
+      ++p;
+      Add(OP_NULL[TYPE_DATE]);
+      break;
+    }
     case CONST_INT32: {
       ++p;
       int32_t v;
@@ -164,6 +174,14 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       AddRelease(new ConstOperator<TYPE_STRING>(v));
       break;
     }
+    case CONST_DATE: {
+      //Decode const operator for date type.
+      ++p;
+      Date v;
+      p = DecodeValue(v, p);
+      AddRelease(new ConstOperator<TYPE_DATE>(v));
+      break;
+    }
     case CONST_N_INT32: {
       ++p;
       int32_t v;
@@ -182,6 +200,12 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       ++p;
       Add(OP_CONST_FALSE);
       break;
+    case CONST_N_DATE: {
+      //Decode const operator for date type.
+      ++p;
+      Add(OP_CONST_FALSE);
+      break;
+    }
     case VAR_I_INT32: {
       ++p;
       int32_t v;
@@ -229,6 +253,14 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
       int32_t v;
       p = DecodeValue(v, p);
       AddRelease(new IndexedVarOperator<TYPE_STRING>(v));
+      break;
+    }
+    case VAR_I_DATE: {
+      //Decode var operator for date type.
+      ++p;
+      Date v;
+      p = DecodeValue(v, p);
+      AddRelease(new IndexedVarOperator<TYPE_DATE>(v));
       break;
     }
     case POS:

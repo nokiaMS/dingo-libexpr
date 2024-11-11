@@ -15,6 +15,7 @@
 #include "operator.h"
 
 #include "calc/special.h"
+#include "calc/casting.h"
 
 namespace dingodb::expr {
 
@@ -67,5 +68,4 @@ void OrOperator::operator()(OperandStack &stack) const {
     stack.Push<bool>();
   }
 }
-
 }  // namespace dingodb::expr

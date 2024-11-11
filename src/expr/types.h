@@ -31,10 +31,19 @@ const Byte TYPE_FLOAT = 0x04;
 const Byte TYPE_DOUBLE = 0x05;
 const Byte TYPE_DECIMAL = 0x06;
 const Byte TYPE_STRING = 0x07;
+const Byte TYPE_DATE = 0x08;  // Date type for wrapper.
 
-const size_t TYPE_NUM = 8;
+/*
+ * The count of the types.
+ */
+const size_t TYPE_NUM = 9;
 
 using Decimal = long double;  // TODO: what's the real type?
+
+/*
+ * Define Date type.
+ */
+using Date = int64_t;
 
 template <Byte T>
 class CxxTraits {};
@@ -79,6 +88,15 @@ template <>
 class CxxTraits<TYPE_STRING> {
  public:
   using Type = String;
+};
+
+/*
+ * Wrapper for dingo type to cpp type.
+ */
+template <>
+class CxxTraits<TYPE_DATE> {
+public:
+ using Type = Date;
 };
 
 const char *TypeName(Byte type);
