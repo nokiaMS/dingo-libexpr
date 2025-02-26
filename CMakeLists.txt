@@ -41,10 +41,12 @@ set(CMAKE_PREFIX_PATH ${OUTPUT_PATH})
 
 set(EXPR_LIB_NAME expr)
 set(REL_LIB_NAME expr_rel)
+set(TYPES_LIB_NAME types)
 
 set(GMP_LIB_NAME libgmp.a)
 set(GMPXX_LIB_NAME libgmpxx.a)
 set(GMP_BINARY_PATH ${CMAKE_CURRENT_BINARY_DIR}/contrib/gmp)
+set(DECIMAL_TYPE_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/types/decimal)
 link_directories(${GMP_BINARY_PATH}/install/lib)
 
 add_subdirectory(src)

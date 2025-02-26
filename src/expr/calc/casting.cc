@@ -19,6 +19,7 @@
 #include <sstream>
 
 #include "../exception.h"
+#include "decimal.h"
 
 namespace dingodb::expr::calc {
 
