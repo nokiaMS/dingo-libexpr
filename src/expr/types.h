@@ -18,6 +18,7 @@
 #include <cstdint>
 
 #include "expr_string.h"
+#include "decimal.h"
 
 namespace dingodb::expr {
 
@@ -36,7 +37,7 @@ const Byte TYPE_DATE  = 0x08;
 
 const size_t TYPE_NUM = 9;
 
-using Decimal = long double;  // TODO: what's the real type?
+//using Decimal = long double;  // TODO: what's the real type?
 
 template <Byte T>
 class CxxTraits {};
@@ -74,7 +75,7 @@ class CxxTraits<TYPE_DOUBLE> {
 template <>
 class CxxTraits<TYPE_DECIMAL> {
  public:
-  using Type = Decimal;
+  using Type = dingodb::types::Decimal;
 };
 
 template <>

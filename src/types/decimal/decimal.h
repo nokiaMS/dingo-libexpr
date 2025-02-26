@@ -15,7 +15,12 @@
 #ifndef DINGO_LIBEXPR_DECIMAL_H
 #define DINGO_LIBEXPR_DECIMAL_H
 
+#include <sstream>
 #include <string>
+#include <stdexcept>
+#include <iostream>
+#include <sstream>
+
 #include "gmpxx.h"
 
 namespace dingodb {
@@ -42,19 +47,45 @@ class Decimal {
    * constructor.
    * @param var The value presented by string.
    */
-  Decimal(std::string var) : v(var, maxPrecision, base) {
+  Decimal(std::string var) {
+    try {
+       v = mpf_class(var, maxPrecision, base);
+    } catch (const std::invalid_argument& e){
+        std::cout << "Decimal error: " << e.what() << std::endl;
+        throw e;
+    }
   }
 
-  Decimal(Decimal& dec) {
+  /**
+   * constructor.
+   * @param var
+   */
+  Decimal(long var) {
+    Decimal(std::to_string(var));
+  }
+
+  /**
+   * constructor.
+   * @param var
+   */
+  Decimal(double var) {
+    Decimal(std::to_string(var));
+  }
+
+  /**
+   * copy construcotr.
+   * @param dec
+   */
+  Decimal(const Decimal& dec) {
     v = dec.getMpf();
   }
 
   /**
-   * for copy operator.
+   * for copy construct operator.
    * @param dec
    * @return
    */
-  Decimal& operator =(Decimal& dec) {
+  Decimal& operator =(const Decimal& dec) {
     if(this == &dec) {
       return *this;
     }
@@ -96,11 +127,70 @@ class Decimal {
   }
 
   /**
+   * trans decimal to int.
+   * @return
+   */
+  int toInt() {
+    return (int)v.get_si();
+  }
+
+  /**
+   * trans decimal to unsigned int.
+   * @return
+   */
+  int toUInt() {
+    return (int)v.get_ui();
+  }
+
+  /**
    * trans decimal to double.
    * @return
    */
   double toDouble() {
     return v.get_d();
+  }
+
+  /**
+   * trans decimal to string.
+   * @return
+   */
+  std::string toString() const {
+    mp_exp_t exp;
+    char *str = nullptr;
+    std::string result;
+
+    str = mpf_get_str(nullptr, &exp, base, 0, v.get_mpf_t());
+    std::cout << "Decimal toString - str: " << str << " expr: " << exp << std::endl;
+    std::string src = std::string(str);
+
+    if(str) {
+      if(src.length() == 0) {
+        result.push_back('0');
+        return result;
+      }
+
+      //has flag.
+      bool hasFlag = (str[0] == '-');
+      int curPos = 0;
+
+      if(hasFlag) {
+        result.push_back('-');
+        curPos++;
+      }
+
+      //expr
+      if(exp == 0){
+        result.push_back('0');
+        result.push_back('.');
+        result.append(src, curPos);
+      }
+      else {
+        result.append(src, curPos, exp);
+        result.push_back('.');
+        result.append(src, curPos + exp);
+      }
+    }
+    return result;
   }
 
  private:
@@ -110,7 +200,7 @@ class Decimal {
    * Get the internal mpf object.
    * @return
    */
-  mpf_class getMpf() {
+  mpf_class getMpf() const {
     return v;
   }
 

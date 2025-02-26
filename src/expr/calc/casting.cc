@@ -19,7 +19,6 @@
 #include <sstream>
 
 #include "../exception.h"
-#include "decimal.h"
 
 namespace dingodb::expr::calc {
 
@@ -43,6 +42,11 @@ int32_t Cast(String v) {
 }
 
 template <>
+int32_t Cast(DecimalP v) {
+    return v.toInt();
+}
+
+template <>
 int64_t Cast(float v) {
   return llround(v);
 }
@@ -62,6 +66,11 @@ int64_t Cast(String v) {
 }
 
 template <>
+int64_t Cast(DecimalP v) {
+    return v.toLong();
+}
+
+template <>
 float Cast(String v) {
   try {
     return std::stof(*v);
@@ -71,12 +80,22 @@ float Cast(String v) {
 }
 
 template <>
+float Cast(DecimalP v) {
+    return (float)v.toDouble();
+}
+
+template <>
 double Cast(String v) {
   try {
     return std::stod(*v);
   } catch (const std::invalid_argument& e) {
     return 0;
   }
+}
+
+template <>
+double Cast(DecimalP v) {
+    return v.toDouble();
 }
 
 template <>
@@ -119,6 +138,41 @@ String Cast(double v) {
 }
 
 template <>
+String Cast(DecimalP v) {
+  return v->toString();
+}
+
+template <>
+DecimalP Cast(int32_t v) {
+  return DecimalP((long)v);
+}
+
+template <>
+DecimalP Cast(int64_t v) {
+  return DecimalP(v);
+}
+
+template <>
+DecimalP Cast(bool v) {
+  return v ? DecimalP(std::string("1")) : DecimalP("0");
+}
+
+template <>
+DecimalP Cast(float v) {
+  return DecimalP((double)v);
+}
+
+template <>
+DecimalP Cast(double v) {
+  return DecimalP(v);
+}
+
+template <>
+DecimalP Cast(String v) {
+  return DecimalP(*v);
+}
+
+template <>
 int32_t CastCheck(int64_t v) {
   auto r = Cast<int32_t>(v);
   if (r == v) {
@@ -154,6 +208,11 @@ int32_t CastCheck(double v) {
 }
 
 template <>
+int32_t CastCheck(DecimalP v) {
+  return v.toInt();
+}
+
+template <>
 int64_t CastCheck(float v) {
   auto r = Cast<int64_t>(v);
   if (ErrorAcceptable(r, v)) {
@@ -169,6 +228,11 @@ int64_t CastCheck(double v) {
     return r;
   }
   throw ExceedsLimits<TYPE_INT64>();
+}
+
+template <>
+int64_t CastCheck(DecimalP v) {
+  return v.toLong();
 }
 
 }  // namespace dingodb::expr::calc

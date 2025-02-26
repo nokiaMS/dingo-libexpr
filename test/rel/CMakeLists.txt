@@ -13,7 +13,9 @@
 # limitations under the License.
 
 include_directories(${CMAKE_SOURCE_DIR}/src/rel)
+include_directories(${DECIMAL_TYPE_SOURCE_PATH})
+include_directories(${GMP_BINARY_PATH}/install/include)
 
 add_executable(test_rel test_rel.cc test_rel_date.cc)
-target_link_libraries(test_rel GTest::gtest_main ${REL_LIB_NAME})
+target_link_libraries(test_rel GTest::gtest_main ${REL_LIB_NAME} ${GMPXX_LIB_NAME} ${GMP_LIB_NAME})
 gtest_discover_tests(test_rel)

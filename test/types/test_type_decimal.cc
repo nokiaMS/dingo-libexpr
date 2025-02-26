@@ -13,8 +13,6 @@
 // limitations under the License.
 
 #include <gtest/gtest.h>
-
-#include <array>
 #include "decimal.h"
 
 using namespace dingodb::types;
@@ -28,5 +26,23 @@ TEST(TestTypeDecimal, DecimalTest) {
 
   long i = v1.toLong();
   ASSERT_EQ(i, 123);
+
+  std::string str = v1.toString();
+  ASSERT_EQ(str, "123.123");
+
+  Decimal v2 = Decimal(std::string("-123456789.12345678987654321"));
+  std::string str2 = v2.toString();
+  ASSERT_EQ(str2, "-123456789.12345678987654321");
+
+  Decimal v3 = Decimal(std::string("-0.12345678987654321"));
+  std::string str3 = v3.toString();
+  ASSERT_EQ(str3, "-0.12345678987654321");
+
+  Decimal v4 = Decimal(std::string("0"));
+  std::string str4 = v4.toString();
+  ASSERT_EQ(str4, "0");
+
+  EXPECT_ANY_THROW(Decimal(std::string("")));
 }
+
 

@@ -13,6 +13,8 @@
 # limitations under the License.
 
 include_directories(${CMAKE_SOURCE_DIR}/src/expr)
+include_directories(${DECIMAL_TYPE_SOURCE_PATH})
+include_directories(${GMP_BINARY_PATH}/install/include)
 
 add_subdirectory(calc)
 

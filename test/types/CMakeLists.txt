@@ -16,7 +16,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/types/decimal)
 include_directories(${GMP_BINARY_PATH}/install/include)
 
 add_executable(test_type_decimal test_type_decimal.cc)
-target_link_libraries(test_type_decimal GTest::gtest_main ${TYPES_LIB_NAME})
+target_link_libraries(test_type_decimal GTest::gtest_main ${TYPES_LIB_NAME} ${GMPXX_LIB_NAME} ${GMP_LIB_NAME})
 add_dependencies(test_type_decimal gmp)
 
 gtest_discover_tests(test_type_decimal)
