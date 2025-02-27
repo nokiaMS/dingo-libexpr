@@ -83,6 +83,9 @@ DecimalP Cast(double v);
 template <>
 DecimalP Cast(String v);
 
+template <>
+bool Cast(DecimalP v);
+
 template <typename D, typename S>
 D CastCheck(S v) {
   return Cast<D>(v);

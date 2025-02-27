@@ -11,42 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-#ifndef _EXPR_CALC_SPECIAL_H_
-#define _EXPR_CALC_SPECIAL_H_
-
-#include "../operand.h"
-#include "decimal_p.h"
+#include "arithmetic.h"
 
 namespace dingodb::expr::calc {
 
-template <typename T>
-bool IsNull(const Operand &v) {
-  return v == nullptr;
+template <>
+Operand Div<::dingodb::types::DecimalP>(
+    ::dingodb::types::DecimalP v0,
+    ::dingodb::types::DecimalP v1) {
+  if (v1 != DecimalP("0")) {
+    return v0 / v1;
+  }
+  return nullptr;
 }
-
-template <typename T>
-bool IsTrue(const Operand &v) {
-  return v != nullptr && v.GetValue<T>();
 }
-
-template <>
-bool IsTrue<String>(const Operand &v);
-
-template <>
-bool IsTrue<DecimalP>(const Operand &v);
-
-template <typename T>
-bool IsFalse(const Operand &v) {
-  return v != nullptr && !v.GetValue<T>();
-}
-
-template <>
-bool IsFalse<String>(const Operand &v);
-
-template <>
-bool IsFalse<DecimalP>(const Operand &v);
-
-}  // namespace dingodb::expr::calc
-
-#endif /* _EXPR_CALC_SPECIAL_H_ */

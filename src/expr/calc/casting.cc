@@ -99,6 +99,11 @@ double Cast(DecimalP v) {
 }
 
 template <>
+bool Cast(DecimalP v) {
+  return llround(v.toDouble());
+}
+
+template <>
 String Cast(int32_t v) {
   return std::to_string(v);
 }

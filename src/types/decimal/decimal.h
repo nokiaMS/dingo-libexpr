@@ -210,6 +210,36 @@ class Decimal {
       return std::move(Decimal().swap(ret));
   }
 
+  /**
+   * decimal - decimal.
+   * @param dec
+   * @return
+   */
+  Decimal operator-(const Decimal &dec) const {
+    mpf_class ret = v - dec.getMpf();
+    return std::move(Decimal().swap(ret));
+  }
+
+  /**
+   * decimal * decimal.
+   * @param dec
+   * @return
+   */
+  Decimal operator*(const Decimal &dec) const {
+    mpf_class ret = v * dec.getMpf();
+    return std::move(Decimal().swap(ret));
+  }
+
+  /**
+   * decimal / decimal.
+   * @param dec
+   * @return
+   */
+  Decimal operator/(const Decimal &dec) const {
+    mpf_class ret = v / dec.getMpf();
+    return std::move(Decimal().swap(ret));
+  }
+
     /**
    * decimal == decimal.
    * @param dec
@@ -262,6 +292,58 @@ class Decimal {
      */
     bool operator>=(const Decimal &dec) const {
         return v >= dec.getMpf();
+    }
+
+    /**
+     * -decimal.
+     * @return
+     */
+    Decimal operator-() const {
+      mp_exp_t exp;
+      char *str = nullptr;
+      std::string result;
+
+      str = mpf_get_str(nullptr, &exp, base, 0, v.get_mpf_t());
+      std::cout << "Decimal toString - str: " << str << " expr: " << exp << std::endl;
+      std::string src = std::string(str);
+
+      if(str) {
+        if(src.length() == 0) {
+          result.push_back('0');
+          return result;
+        }
+
+        //has flag.
+        bool hasFlag = (str[0] == '-');
+        int curPos = 0;
+
+        if(!hasFlag) {
+          //The origin number must be pos, so we add '-' here for '-' operator.
+          result.push_back('-');
+        }
+
+        //expr
+        if(exp == 0){
+          result.push_back('0');
+          result.push_back('.');
+          result.append(src, curPos);
+        }
+        else {
+          result.append(src, curPos, exp);
+          result.push_back('.');
+          result.append(src, curPos + exp);
+        }
+      }
+      return result;
+    }
+
+    /**
+     * abs.
+     * @param dec
+     */
+    Decimal Abs() const {
+      mpf_class ret = abs(v);
+      return std::move(Decimal().swap(ret));
     }
 
  private:

@@ -71,6 +71,21 @@ class DecimalP {
     return *m_ptr + *v.m_ptr;
   }
 
+  DecimalP operator-(const DecimalP &v) const {
+    return *m_ptr - *v.m_ptr;
+  }
+
+  DecimalP operator*(const DecimalP &v) const {
+    return *m_ptr * *v.m_ptr;
+  }
+
+  DecimalP operator/(const DecimalP &v) const {
+    return *m_ptr / *v.m_ptr;
+  }
+
+  DecimalP operator-() const {
+    return -(*m_ptr);
+  }
 
   bool operator==(const DecimalP &v) const {
     return *m_ptr == *v.m_ptr;
@@ -96,6 +111,10 @@ class DecimalP {
     return *m_ptr >= *v.m_ptr;
   }
 
+  DecimalP Abs() {
+    return DecimalP((*m_ptr).Abs());
+  }
+
  private:
   ValueType m_ptr;
 
@@ -116,7 +135,5 @@ namespace std {
             return hash<std::string>()(val->toString());
         }
     };
-
 }  // namespace std
-
 #endif  // DINGO_LIBEXPR_DECIMAL_P_H

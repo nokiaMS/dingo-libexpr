@@ -13,6 +13,8 @@ set(SRCS
 )
 
 include_directories(${GMP_BINARY_PATH}/install/include)
+include_directories(${CMAKE_SOURCE_DIR}/src/expr)
+
 add_library(${TYPES_LIB_NAME} STATIC ${SRCS})
 target_link_libraries(${TYPES_LIB_NAME} ${GMP_LIB_NAME} ${GMPXX_LIB_NAME})
 add_dependencies(${TYPES_LIB_NAME} gmp)

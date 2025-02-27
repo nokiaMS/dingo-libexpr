@@ -17,6 +17,7 @@ set(SRCS
     calc/mathematic.cc
     calc/special.cc
     calc/string_fun.cc
+    calc/arithmetic.cc
     codec.cc
     expr_string.cc
     operand.cc

@@ -65,6 +65,9 @@ TEST(TestTypeDecimal, DecimalTest) {
 
   //Test dec > dec.
   ASSERT_FALSE(Decimal(std::string("123.123")) > Decimal(std::string("123.124")));
+
+  //Test -dec.
+  ASSERT_EQ((-Decimal(std::string("123.123"))).toString(), std::string("-123.123"));
 }
 
 

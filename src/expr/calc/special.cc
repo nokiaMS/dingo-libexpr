@@ -26,4 +26,14 @@ bool IsFalse<String>(const Operand &v) {
   return v != nullptr;
 }
 
+template <>
+bool IsTrue<DecimalP>([[maybe_unused]] const Operand &v) {
+  return false;
+}
+
+template <>
+bool IsFalse<DecimalP>(const Operand &v) {
+  return v != nullptr;
+}
+
 }  // namespace dingodb::expr::calc

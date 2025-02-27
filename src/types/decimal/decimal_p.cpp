@@ -15,5 +15,6 @@
 #include "decimal_p.h"
 
 namespace dingodb {
-namespace types {}  // namespace types
+namespace types {
+}  // namespace types
 }  // namespace dingodb
