@@ -29,6 +29,8 @@ std::ostream &operator<<(std::ostream &os, const Operand &v) {
     os << std::get<double>(v.m_data);
   } else if (std::holds_alternative<String>(v.m_data)) {
     os << std::get<String>(v.m_data);
+  } else if (std::holds_alternative<DecimalP>(v.m_data)) {
+      os << std::get<String>(v.m_data);
   } else if (std::holds_alternative<std::monostate>(v.m_data)) {
     os << "(null)";
   } else {

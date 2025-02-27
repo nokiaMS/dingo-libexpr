@@ -67,10 +67,10 @@ class DecimalP {
     return m_ptr->toDouble();
   }
 
-  /*
   DecimalP operator+(const DecimalP &v) const {
     return *m_ptr + *v.m_ptr;
   }
+
 
   bool operator==(const DecimalP &v) const {
     return *m_ptr == *v.m_ptr;
@@ -95,7 +95,6 @@ class DecimalP {
   bool operator>=(const DecimalP &v) const {
     return *m_ptr >= *v.m_ptr;
   }
-  */
 
  private:
   ValueType m_ptr;
@@ -107,5 +106,17 @@ class DecimalP {
 
 }  // namespace types
 }  // namespace dingodb
+
+namespace std {
+    using namespace dingodb::expr;
+
+    template <>
+    struct hash<::dingodb::types::DecimalP> {
+        size_t operator()(const ::dingodb::types::DecimalP &val) const noexcept {
+            return hash<std::string>()(val->toString());
+        }
+    };
+
+}  // namespace std
 
 #endif  // DINGO_LIBEXPR_DECIMAL_P_H

@@ -18,7 +18,7 @@
 #include <cstdint>
 
 #include "expr_string.h"
-#include "decimal.h"
+#include "decimal_p.h"
 
 namespace dingodb::expr {
 
@@ -75,7 +75,7 @@ class CxxTraits<TYPE_DOUBLE> {
 template <>
 class CxxTraits<TYPE_DECIMAL> {
  public:
-  using Type = dingodb::types::Decimal;
+  using Type = dingodb::types::DecimalP;
 };
 
 template <>

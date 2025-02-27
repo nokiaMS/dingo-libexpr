@@ -22,6 +22,9 @@
 #include <vector>
 
 #include "types.h"
+#include "decimal_p.h"
+
+using namespace dingodb::types;
 
 namespace dingodb::expr {
 
@@ -32,6 +35,9 @@ class Operand {
   }
 
   Operand(String::ValueType v) : m_data(String(v)) {
+  }
+
+  Operand(DecimalP::ValueType v) : m_data(DecimalP(v)) {
   }
 
   Operand([[maybe_unused]] std::nullptr_t v) {
@@ -74,12 +80,14 @@ class Operand {
       float,
       double,
       String,
+      DecimalP,
       std::shared_ptr<std::vector<int32_t>>,
       std::shared_ptr<std::vector<int64_t>>,
       std::shared_ptr<std::vector<bool>>,
       std::shared_ptr<std::vector<float>>,
       std::shared_ptr<std::vector<double>>,
-      std::shared_ptr<std::vector<std::string>>>
+      std::shared_ptr<std::vector<std::string>>,
+      std::shared_ptr<std::vector<DecimalP>>>
       m_data;
 
   friend class std::hash<::dingodb::expr::Operand>;

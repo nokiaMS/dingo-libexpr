@@ -31,7 +31,7 @@ const Operator *const OP_NULL[] = {
     [TYPE_BOOL]    = new NullOperator<TYPE_BOOL>,
     [TYPE_FLOAT]   = new NullOperator<TYPE_FLOAT>,
     [TYPE_DOUBLE]  = new NullOperator<TYPE_DOUBLE>,
-    [TYPE_DECIMAL] = nullptr,
+    [TYPE_DECIMAL] = new NullOperator<TYPE_DECIMAL>,
     [TYPE_STRING]  = new NullOperator<TYPE_STRING>,
     [TYPE_DATE]  = new NullOperator<TYPE_DATE>,
 };

@@ -43,6 +43,28 @@ TEST(TestTypeDecimal, DecimalTest) {
   ASSERT_EQ(str4, "0");
 
   EXPECT_ANY_THROW(Decimal(std::string("")));
+
+  //Test dec + dec.
+  Decimal result = Decimal(std::string("123.123")) + Decimal(std::string("123.123"));
+  ASSERT_EQ(result.toString(), "246.246");
+
+  //Test dec == dec.
+  ASSERT_TRUE(Decimal(std::string("123.123")) == Decimal(std::string("123.123")));
+
+  //Test dec != dec.
+  ASSERT_TRUE(Decimal(std::string("123.123")) != Decimal(std::string("123.124")));
+
+  //Test dec <= dec.
+  ASSERT_TRUE(Decimal(std::string("123.123")) <= Decimal(std::string("123.124")));
+
+  //Test dec < dec.
+  ASSERT_TRUE(Decimal(std::string("123.123")) < Decimal(std::string("123.124")));
+
+  //Test dec >= dec.
+  ASSERT_FALSE(Decimal(std::string("123.123")) >= Decimal(std::string("123.124")));
+
+  //Test dec > dec.
+  ASSERT_FALSE(Decimal(std::string("123.123")) > Decimal(std::string("123.124")));
 }
 
 

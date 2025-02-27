@@ -102,6 +102,13 @@ class Decimal {
   }
 
   /**
+   * constructor.
+   * @param mp
+   */
+  Decimal(mpf_class& mp) : v(mp) {
+  }
+
+  /**
    * Get the precision.
    * @return
    */
@@ -193,8 +200,81 @@ class Decimal {
     return result;
   }
 
+  /**
+   * decimal + decimal.
+   * @param dec
+   * @return
+   */
+  Decimal operator+(const Decimal &dec) const {
+      mpf_class ret = v + dec.getMpf();
+      return std::move(Decimal().swap(ret));
+  }
+
+    /**
+   * decimal == decimal.
+   * @param dec
+   * @return
+   */
+    bool operator==(const Decimal &dec) const {
+        return v == dec.getMpf();
+    }
+
+    /**
+     * decimal != decimal.
+     * @param dec
+     * @return
+     */
+    bool operator!=(const Decimal &dec) const {
+        return v != dec.getMpf();
+    }
+
+    /**
+     * decimal < decimal.
+     * @param dec
+     * @return
+     */
+    bool operator<(const Decimal &dec) const {
+        return v < dec.getMpf();
+    }
+
+    /**
+     * decimal <= decimal.
+     * @param dec
+     * @return
+     */
+    bool operator<=(const Decimal &dec) const {
+        return v <= dec.getMpf();
+    }
+
+    /**
+     * decimal > decimal.
+     * @param dec
+     * @return
+     */
+    bool operator>(const Decimal &dec) const {
+        return v > dec.getMpf();
+    }
+
+    /**
+     * decimal >= decimal.
+     * @param dec
+     * @return
+     */
+    bool operator>=(const Decimal &dec) const {
+        return v >= dec.getMpf();
+    }
+
  private:
   mpf_class v;
+
+  /**
+   * swapper.
+   * @param mp
+   */
+  Decimal& swap(mpf_class & mp) {
+      v.swap(mp);
+      return *this;
+  }
 
   /**
    * Get the internal mpf object.
