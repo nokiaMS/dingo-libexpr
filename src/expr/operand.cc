@@ -30,7 +30,7 @@ std::ostream &operator<<(std::ostream &os, const Operand &v) {
   } else if (std::holds_alternative<String>(v.m_data)) {
     os << std::get<String>(v.m_data);
   } else if (std::holds_alternative<DecimalP>(v.m_data)) {
-      os << std::get<String>(v.m_data);
+      os << std::get<DecimalP>(v.m_data);
   } else if (std::holds_alternative<std::monostate>(v.m_data)) {
     os << "(null)";
   } else {
@@ -49,6 +49,17 @@ std::any FromOperand<String::ValueType>(const Operand &v) {
     opt = std::optional<String::ValueType>();
   }
   return std::make_any<std::optional<String::ValueType>>(opt);
+}
+
+template <>
+std::any FromOperand<DecimalP>(const Operand &v) {
+  std::optional<DecimalP> opt;
+  if  (v != nullptr) {
+    opt = std::optional<DecimalP>(v.GetValue<DecimalP>());
+  } else {
+    opt = std::optional<DecimalP>();
+  }
+  return std::make_any<std::optional<DecimalP>>(opt);
 }
 
 template <>

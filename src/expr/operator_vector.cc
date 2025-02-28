@@ -161,7 +161,9 @@ const Byte *OperatorVector::Decode(const Byte code[], size_t len) {
     }
     case CONST_DECIMAL: {
       ++p;
-      // TODO
+      DecimalP v;
+      p = DecodeValue(v, p);
+      AddRelease(new ConstOperator<TYPE_DECIMAL>(v));
       break;
     }
     case CONST_STRING: {

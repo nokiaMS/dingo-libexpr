@@ -28,12 +28,12 @@ bool IsFalse<String>(const Operand &v) {
 
 template <>
 bool IsTrue<DecimalP>([[maybe_unused]] const Operand &v) {
-  return false;
+  return v != nullptr && v.GetValue<DecimalP>().toInt();
 }
 
 template <>
 bool IsFalse<DecimalP>(const Operand &v) {
-  return v != nullptr;
+  return v != nullptr && v.GetValue<DecimalP>().toInt();;
 }
 
 }  // namespace dingodb::expr::calc

@@ -75,7 +75,7 @@ TEST(TestOtherToDecimalP, Cast) {
   ASSERT_EQ((calc::Cast<double>(DecimalP("0"))), 0);
 
   ASSERT_EQ((calc::Cast<String>(DecimalP("0"))), "0");
-  //ASSERT_EQ((calc::Cast<String>(DecimalP("-123456.123456789"))), "-123456.123456789");
+  ASSERT_EQ((calc::Cast<String>(DecimalP("-123456.123456789"))), "-123456.123456789");
   ASSERT_EQ((calc::Cast<String>(DecimalP("123456.123456789"))), "123456.123456789");
 }
 

@@ -10,6 +10,7 @@
 
 set(SRCS
     decimal/decimal.cpp
+        decimal/decimal_p.cpp
 )
 
 include_directories(${GMP_BINARY_PATH}/install/include)

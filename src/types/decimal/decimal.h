@@ -246,7 +246,8 @@ class Decimal {
    * @return
    */
     bool operator==(const Decimal &dec) const {
-        return v == dec.getMpf();
+      bool result = (v == dec.getMpf());
+      return result;
     }
 
     /**

@@ -15,6 +15,12 @@
 cmake_minimum_required(VERSION 3.24 FATAL_ERROR)
 project(dingo-libexpr C CXX)
 
+set(CMAKE_BUILD_TYPE "Debug")
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    set(CMAKE_CXX_FLAGS "-O0")
+endif ()
+
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
 

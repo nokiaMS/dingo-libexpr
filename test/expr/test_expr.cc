@@ -77,11 +77,64 @@ static Tuple tuple4{"abc", "aBc"};
 static Tuple tuple5{1, 1, 1704067200000};
 static Tuple tuple6{1, 1, nullptr};
 
+static Tuple tupleDec1{std::make_shared<Decimal>(Decimal("123.123")), std::make_shared<Decimal>(Decimal("456.456"))};
+static Tuple tupleDec2{std::make_shared<Decimal>(Decimal("123.123")), std::make_shared<Decimal>(Decimal("123.123"))};
+
 // Test cases with vars
 INSTANTIATE_TEST_SUITE_P(
     VarExpr,
     ExprTest,
     testing::Values(
+        /**
+         * decimal : to == t1.
+         */
+        std::make_tuple("360036019106", &tupleDec1, false),
+
+        /**
+         * decimal : to != t1.
+         */
+        std::make_tuple("360036019606", &tupleDec1, true),
+
+        /**
+         * decimal : to == t1.
+         */
+        std::make_tuple("360036019106", &tupleDec2, true),
+
+        /**
+         * decimal : to < t1.
+         */
+        std::make_tuple("360036019506", &tupleDec2, false),
+
+        /**
+         * decimal : to <= t1.
+         */
+        std::make_tuple("360036019406", &tupleDec2, true),
+
+        /**
+         * decimal :  to > t1.
+         */
+        std::make_tuple("360036019306", &tupleDec2, false),
+
+        /**
+         * decimal : t0 >= t1.
+         */
+        std::make_tuple("360036019206", &tupleDec2, true),
+
+        /**
+         * decimal : is null.
+         */
+        std::make_tuple("3600A106", &tupleDec2, false),
+
+        /**
+         * decimal : is true.
+         */
+        std::make_tuple("3600A206", &tupleDec2, true),
+
+        /**
+         * decimal : is false.
+         */
+        std::make_tuple("3600A306", &tupleDec2, true),
+
         std::make_tuple("3100", &tuple1, 1),                         // t0
         std::make_tuple("3101", &tuple1, 2),                         // t1
         std::make_tuple("310031018301", &tuple1, 3),                 // t0 + t1

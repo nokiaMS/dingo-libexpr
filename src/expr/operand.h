@@ -37,6 +37,9 @@ class Operand {
   Operand(String::ValueType v) : m_data(String(v)) {
   }
 
+  Operand(DecimalP v) : m_data(v) {
+  }
+
   Operand(DecimalP::ValueType v) : m_data(DecimalP(v)) {
   }
 
@@ -117,6 +120,9 @@ std::any FromOperand(const Operand &v) {
 // GCC does not allow template specialization in class, so we need this.
 template <>
 std::any FromOperand<String::ValueType>(const Operand &v);
+
+template <>
+std::any FromOperand<DecimalP::ValueType>(const Operand &v);
 
 template <typename T>
 T FromOperandV2(const Operand &v) {

@@ -16,5 +16,11 @@
 
 namespace dingodb {
 namespace types {
+
+std::ostream &operator<<(std::ostream &os, const DecimalP &v) {
+  os << *(v.m_ptr);
+  return os;
+}
+
 }  // namespace types
 }  // namespace dingodb

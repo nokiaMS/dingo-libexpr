@@ -126,8 +126,8 @@ class DecimalP {
 }  // namespace types
 }  // namespace dingodb
 
+//using namespace dingodb::expr;
 namespace std {
-    using namespace dingodb::expr;
 
     template <>
     struct hash<::dingodb::types::DecimalP> {
