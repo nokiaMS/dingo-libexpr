@@ -9,8 +9,8 @@
 # limitations under the License.
 
 set(SRCS
-    decimal/decimal.cpp
-        decimal/decimal_p.cpp
+    decimal/decimal.cc
+        decimal/decimal_p.cc
 )
 
 include_directories(${GMP_BINARY_PATH}/install/include)
