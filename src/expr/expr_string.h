@@ -103,6 +103,25 @@ class String {
   friend std::ostream &operator<<(std::ostream &os, const String &v);
 };
 
+class Decimal {
+  public:
+   String m_string;
+
+  Decimal(String str) : m_string(str) {}
+
+  Decimal() {
+    m_string = String();
+  }
+
+  bool operator==(const Decimal &v) const {
+    return m_string == v.m_string;
+  }
+
+  bool operator!=(const Decimal &v) const {
+    return m_string != v.m_string;
+  }
+};
+
 }  // namespace dingodb::expr
 
 namespace std {
@@ -111,6 +130,13 @@ template <>
 struct hash<::dingodb::expr::String> {
   size_t operator()(const ::dingodb::expr::String &val) const noexcept {
     return hash<std::string>()(*val);
+  }
+};
+
+template <>
+struct hash<::dingodb::expr::Decimal> {
+  size_t operator()(const ::dingodb::expr::Decimal &val) const noexcept {
+    return hash<::dingodb::expr::String>()(val.m_string);
   }
 };
 

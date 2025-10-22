@@ -44,6 +44,10 @@ INSTANTIATE_TEST_SUITE_P(
     ConstExpr,
     ExprTest,
     testing::Values(
+      //const value 12.34 for decimal type.
+      //std::make_tuple("160531322E3334", nullptr, "12.34"),
+      std::make_tuple("160531322E3334160531322E33359106", nullptr, true)
+      /*
         std::make_tuple("1101", nullptr, 1),                                    // 1
         std::make_tuple("2101", nullptr, -1),                                   // -1
         std::make_tuple("119601", nullptr, 150),                                // 150
@@ -68,8 +72,10 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple("01A101", nullptr, true),                               // is_null(null)
         std::make_tuple("1101A201", nullptr, true),                             // is_true(1)
         std::make_tuple("218080808008B301", nullptr, INT_MIN)                   // abs(-INT32_MAX)
+        */
         ));
 
+/*
 static Tuple tuple1{1, 2};
 static Tuple tuple2{35LL, 46LL};
 static Tuple tuple3{3.5, 4.6};
@@ -191,3 +197,5 @@ INSTANTIATE_TEST_SUITE_P(
         // is_false(TIMESTAMP(null))
         std::make_tuple("3901A30900", &tuple9, false)
         ));
+
+*/

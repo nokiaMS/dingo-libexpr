@@ -15,6 +15,8 @@
 #ifndef _EXPR_CALC_RELATIONAL_H_
 #define _EXPR_CALC_RELATIONAL_H_
 
+#include "../operand.h"
+
 namespace dingodb::expr::calc {
 
 template <typename T>

@@ -82,12 +82,13 @@ class Operand {
       float,
       double,
       String,
+      Decimal,
       std::shared_ptr<std::vector<int32_t>>,
       std::shared_ptr<std::vector<int64_t>>,
       std::shared_ptr<std::vector<bool>>,
       std::shared_ptr<std::vector<float>>,
       std::shared_ptr<std::vector<double>>,
-      std::shared_ptr<std::vector<std::string>>>
+      std::shared_ptr<std::vector<std::string>>>   //Both Decimal and String contain string values.
       m_data;
 
   friend class std::hash<::dingodb::expr::Operand>;
