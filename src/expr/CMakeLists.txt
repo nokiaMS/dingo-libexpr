@@ -30,3 +30,7 @@ set(SRCS
 )
 
 add_library(${EXPR_LIB_NAME} STATIC ${SRCS})
+
+include_directories(${GMP_BINARY_PATH}/install/include)
+target_link_libraries(${EXPR_LIB_NAME} ${GMP_LIB_NAME} ${GMPXX_LIB_NAME})
+add_dependencies(${EXPR_LIB_NAME} gmp)

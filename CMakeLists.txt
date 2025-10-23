@@ -18,6 +18,9 @@ project(dingo-libexpr C CXX)
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++17" COMPILER_SUPPORTS_CXX17)
 
+#Compile contrib gmp.
+add_subdirectory(contrib/gmp)
+
 option(BUILD_TESTS "Build tests." ON)
 
 if(COMPILER_SUPPORTS_CXX17)
@@ -38,6 +41,11 @@ set(CMAKE_PREFIX_PATH ${OUTPUT_PATH})
 
 set(EXPR_LIB_NAME expr)
 set(REL_LIB_NAME expr_rel)
+
+set(GMP_LIB_NAME libgmp.a)
+set(GMPXX_LIB_NAME libgmpxx.a)
+set(GMP_BINARY_PATH ${CMAKE_CURRENT_BINARY_DIR}/contrib/gmp)
+link_directories(${GMP_BINARY_PATH}/install/lib)
 
 add_subdirectory(src)
 if(BUILD_TESTS)
