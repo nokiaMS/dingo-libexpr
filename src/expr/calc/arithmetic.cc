@@ -39,7 +39,10 @@ Operand Div<::dingodb::types::DecimalP>(
     ::dingodb::types::DecimalP v0,
     ::dingodb::types::DecimalP v1) {
   if (v1 != DecimalP(std::string("0"))) {
-    return v0 / v1;
+    DecimalP result = v0 / v1;
+    std::string r1 = result->toString(MAX_PRECISION, 8);
+
+    return result;
   }
   return nullptr;
 }

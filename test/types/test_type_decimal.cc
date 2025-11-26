@@ -391,6 +391,11 @@ TEST(TestTypeDecimal, DecimalTest) {
   std::cout << ddbbaresult2.toString() << std::endl;
   ASSERT_EQ(ddbbaresult2.toString(), std::string("987.1234"));
   ASSERT_EQ(ddbbaresult2.toString(10,4), std::string("987.1234"));
+
+  Decimal ddbbaresult3 = Decimal(std::string("1.12")) / Decimal(std::string("1.12"));
+  std::cout << ddbbaresult3.toString() << std::endl;
+  ASSERT_EQ(ddbbaresult3.toString(), std::string("1"));
+  ASSERT_EQ(ddbbaresult3.toString(10,8), std::string("1.00000000"));
 }
 
 

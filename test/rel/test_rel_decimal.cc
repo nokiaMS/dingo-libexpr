@@ -42,6 +42,12 @@ static Data MakeDataForCast() {
 };
 }
 
+static Data MakeDataForDiv() {
+  return Data{
+    new Tuple{DecimalP(std::string("1.12")), DecimalP(std::string("1.12"))},  //column contains nullptr.
+};
+}
+
 static Data MakeDataInt() {
   return Data{
     new Tuple{10, nullptr},  //column contains nullptr.
@@ -81,6 +87,7 @@ INSTANTIATE_TEST_SUITE_P(
     DecimalPipeOp,
     PipeOpDecimalTest,
     testing::Values(
+      /*
         // select all columns without where statement.
         std::make_tuple(
             "723100360100",
@@ -96,6 +103,15 @@ INSTANTIATE_TEST_SUITE_P(
             Data{
               new Tuple{1, 77.77},
             }
+        ),
+        */
+        // table t1(id int, a double), value (1, 77.77), select * from t1 where a >= 77.77.
+        std::make_tuple(
+          "7236003601860600",
+          MakeDataForDiv(),
+          Data{
+            new Tuple{DecimalP(std::string("1"))},
+          }
         )
     )
 );

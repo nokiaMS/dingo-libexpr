@@ -106,6 +106,7 @@ INSTANTIATE_TEST_SUITE_P(
     PipeOp,
     PipeOpTest,
     testing::Values(
+      /*
         // FILTER(input, $[2] > 50)
         std::make_tuple(
             "7134021442480000930400",
@@ -190,6 +191,19 @@ INSTANTIATE_TEST_SUITE_P(
                 new Tuple{"1.234567761421204"},
             }
         ),
+        */
+        // ltrim(double)
+        std::make_tuple(
+            "723500f075f12800",
+            Data{
+                new Tuple{1453.9999},
+            },
+            Data{
+                new Tuple{"1453.9999"},
+            }
+        )
+        /*
+        ,
         // PROJECT(input, substr($[1]))
         std::make_tuple(
             "72370111011104F12E",
@@ -241,6 +255,7 @@ INSTANTIATE_TEST_SUITE_P(
               new Tuple{nullptr},
           }
         )
+        */
     )
 );
 

@@ -34,6 +34,11 @@ T Add(T v0, T v1) {
   return v0 + v1;
 }
 
+template <typename R, typename T>
+R Add(T v0, T v1) {
+  return (R)v0 + (R)v1;
+}
+
 template <typename T>
 T Sub(T v0, T v1) {
   return v0 - v1;
@@ -42,6 +47,11 @@ T Sub(T v0, T v1) {
 template <typename T>
 T Mul(T v0, T v1) {
   return v0 * v1;
+}
+
+template <typename R, typename T>
+R Mul(T v0, T v1) {
+  return (R)v0 * (R)v1;
 }
 
 template <typename T>

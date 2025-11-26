@@ -214,7 +214,7 @@ const Operator *const OP_NEG[] = {
 
 const Operator *const OP_ADD[] = {
     [TYPE_NULL]    = nullptr,
-    [TYPE_INT32]   = new BinaryArithmeticOperator<TYPE_INT32, calc::Add>,
+    [TYPE_INT32]   = new BinaryArithmeticOperatorV2<TYPE_INT64, TYPE_INT32, calc::Add>,
     [TYPE_INT64]   = new BinaryArithmeticOperator<TYPE_INT64, calc::Add>,
     [TYPE_BOOL]    = nullptr,
     [TYPE_FLOAT]   = new BinaryArithmeticOperator<TYPE_FLOAT, calc::Add>,
@@ -236,7 +236,7 @@ const Operator *const OP_SUB[] = {
 
 const Operator *const OP_MUL[] = {
     [TYPE_NULL]    = nullptr,
-    [TYPE_INT32]   = new BinaryArithmeticOperator<TYPE_INT32, calc::Mul>,
+    [TYPE_INT32]   = new BinaryArithmeticOperatorV2<TYPE_INT64, TYPE_INT32, calc::Mul>,
     [TYPE_INT64]   = new BinaryArithmeticOperator<TYPE_INT64, calc::Mul>,
     [TYPE_BOOL]    = nullptr,
     [TYPE_FLOAT]   = new BinaryArithmeticOperator<TYPE_FLOAT, calc::Mul>,

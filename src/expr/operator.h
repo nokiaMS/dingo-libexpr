@@ -176,6 +176,11 @@ class BinaryOperatorV2 : public OperatorBase<R> {
 template <Byte R, TypeOf<R> (*Calc)(TypeOf<R>, TypeOf<R>)>
 using BinaryArithmeticOperator = BinaryOperator<R, R, R, Calc>;
 
+
+template <Byte R, Byte T, TypeOf<R> (*Calc)(TypeOf<T>, TypeOf<T>)>
+using BinaryArithmeticOperatorV2 = BinaryOperator<R, T, T, Calc>;
+
+
 template <Byte T, bool (*Calc)(TypeOf<T>, TypeOf<T>)>
 using BinaryRelationOperator = BinaryOperator<TYPE_BOOL, T, T, Calc>;
 
