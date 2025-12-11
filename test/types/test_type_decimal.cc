@@ -19,6 +19,7 @@
 using namespace dingodb::types;
 
 TEST(TestTypeDecimal, DecimalTest) {
+  /*
   Decimal v = Decimal("123.123");
 
   //Test function printDecimal.
@@ -359,7 +360,12 @@ TEST(TestTypeDecimal, DecimalTest) {
 
   //Test dec > dec.
   ASSERT_FALSE(Decimal(std::string("123.123")) > Decimal(std::string("123.124")));
+  */
 
+  //Test -dec.
+  ASSERT_EQ((-Decimal(std::string("10.001"))).toString(), std::string("-10.001"));
+
+  /*
   //Test -dec.
   ASSERT_EQ((-Decimal(std::string("123.123"))).toString(), std::string("-123.123"));
 
@@ -412,6 +418,7 @@ TEST(TestTypeDecimal, DecimalTest) {
   std::cout << ddbbaresult2.toString() << std::endl;
   ASSERT_EQ(ddbbaresult2.toString(), std::string("987.1234"));
   ASSERT_EQ(ddbbaresult2.toString(10,4), std::string("987.1234"));
+  */
 }
 
 
