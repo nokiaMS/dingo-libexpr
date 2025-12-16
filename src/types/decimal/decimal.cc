@@ -32,7 +32,9 @@ Decimal::Decimal(const std::string & var) {
   try {
     int i = 0;
     for (; i < var.length(); i++) {
-      if (var[i] != '.' && var[i] != 'e' && var[i] != 'E'
+      if ((var[i] == '-' || var[i] == '+') && i != 0) {
+        break;
+      } else if (var[i] != '.' && var[i] != 'e' && var[i] != 'E'
         && var[i] != '-' && var[i] != '+'
         && (var[i] < 0x30 || var[i] > 0x39)) {
         break;
