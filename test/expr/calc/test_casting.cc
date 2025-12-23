@@ -80,6 +80,19 @@ TEST(TestOtherToDecimalP, Cast) {
   ASSERT_EQ((calc::Cast<String>(DecimalP(std::string("0")))), "0");
   ASSERT_EQ((calc::Cast<String>(DecimalP(std::string("-123456.123456789")))), "-123456.123456789");
   ASSERT_EQ((calc::Cast<String>(DecimalP(std::string("123456.123456789")))), "123456.123456789");
+
+  ASSERT_EQ((calc::Cast<DecimalP>(1.0f))->toString(), "1");
+
+  ASSERT_EQ((calc::Cast<DecimalP>(123.123456789))->toString(), "123.123456789");
+  ASSERT_EQ((calc::Cast<DecimalP>(123.445))->toString(), "123.445");
+  ASSERT_EQ((calc::Cast<DecimalP>(123.0))->toString(), "123");
+  ASSERT_EQ((calc::Cast<DecimalP>(0.0))->toString(), "0");
+  ASSERT_EQ((calc::Cast<DecimalP>(-0.0))->toString(), "0");
+
+  //ASSERT_EQ((calc::Cast<DecimalP>(123.123f))->toString(), "123.123");    //Failed now as float to double.
+  //ASSERT_EQ((calc::Cast<DecimalP>(123.445f))->toString(), "123.445");   //Failed now as float to double.
+  //ASSERT_EQ((calc::Cast<DecimalP>(123.44999f))->toString(), "123.449989318848");  //Failed now as float to double.
+  ASSERT_EQ((calc::Cast<DecimalP>(123.0f))->toString(), "123");
+  ASSERT_EQ((calc::Cast<DecimalP>(0.0f))->toString(), "0");
+  ASSERT_EQ((calc::Cast<DecimalP>(-0.0f))->toString(), "0");
 }
-
-

@@ -22,6 +22,28 @@
 
 namespace dingodb::expr::calc {
 
+#define MAX_SINGLEDOUBLE_LENGTH 63
+#define MAX_TMP_SPACE 70
+#define MAX_DOUBLE_SIGNIFICANT_FIGURES 16
+
+#define C_ZERO 0x30
+#define C_ONE 0x31
+#define C_NINE 0x39
+#define C_SPACE 0x20
+#define C_COMMA 0x2C
+#define C_POINT 0x2E
+#define C_MINUS 0x2D
+#define C_POUND 0x23
+
+const bool FLAGS_accurate_double_enable = true;
+
+typedef struct SingleNumInfo {
+  bool signedFlag;
+  bool pointFlag;
+  int32_t startPos;
+  int32_t endPos;
+} SingleNumInfo;
+
 template <>
 int32_t Cast(float v) {
   return lround(v);
@@ -188,14 +210,16 @@ DecimalP Cast(bool v) {
 
 template <>
 DecimalP Cast(float v) {
-  String const f2s = CastFloat(v);
-  return DecimalP(*f2s.GetPtr());
+  char buffer[64];
+  int len = castDoubleToString(v, buffer, sizeof(buffer), true);
+  return DecimalP(std::string(buffer, len));
 }
 
 template <>
 DecimalP Cast(double v) {
-  String const d2s = CastDouble(v);
-  return DecimalP(*d2s.GetPtr());
+  char buffer[64];
+  int len = castDoubleToString(v, buffer, sizeof(buffer), true);
+  return DecimalP(std::string(buffer, len));
 }
 
 template <>
@@ -264,6 +288,150 @@ int64_t CastCheck(double v) {
 template <>
 int64_t CastCheck(DecimalP v) {
   return v.toLong();
+}
+
+void singlePrecisionDeal(char *doubleStr, SingleNumInfo &singleNumInfo) {
+  int32_t count = 0, idxDS = 0;
+  bool startFlag = false;
+
+  if (doubleStr[0] == C_ZERO) {
+    singleNumInfo.startPos = 1;
+  }
+
+  if (doubleStr[0] == C_MINUS && doubleStr[1] == C_ZERO) {
+    singleNumInfo.startPos = 2;
+  }
+
+  while (doubleStr[idxDS] != 0) {
+    if (count < MAX_DOUBLE_SIGNIFICANT_FIGURES) {
+      if (!startFlag && doubleStr[idxDS] >= C_ONE && doubleStr[idxDS] <= C_NINE) {
+        startFlag = true;
+      }
+      if (startFlag && doubleStr[idxDS] != C_POINT) {
+        count++;
+      }
+    } else if (doubleStr[idxDS] != C_POINT) {
+      doubleStr[idxDS] = C_ZERO;
+    }
+
+    if (doubleStr[idxDS] == C_POINT) {
+      singleNumInfo.pointFlag = true;
+    }
+    idxDS++;
+  }
+  singleNumInfo.endPos = idxDS;
+}
+
+void tailZeroDeal(char *doubleStr, SingleNumInfo &singleNumInfo) {
+  if (singleNumInfo.pointFlag) {
+    int32_t idxDS = singleNumInfo.endPos - 1;
+
+    while (idxDS > 0 && (doubleStr[idxDS] == C_ZERO || doubleStr[idxDS] == C_POINT)) {
+      if (doubleStr[idxDS] == C_POINT) {
+        doubleStr[idxDS] = 0;
+        idxDS--;
+        break;
+      }
+      doubleStr[idxDS] = 0;
+      idxDS--;
+    }
+
+    singleNumInfo.endPos = idxDS + 1;
+    singleNumInfo.pointFlag = false;
+    while (idxDS > 0) {
+      if (doubleStr[idxDS] == C_POINT) {
+        singleNumInfo.pointFlag = true;
+      }
+      idxDS--;
+    }
+  }
+}
+
+void headZeroDeal(char *doubleStr, SingleNumInfo &singleNumInfo, bool keepLeadingZero = false) {
+  if (doubleStr[0] == C_MINUS && doubleStr[1] == C_ZERO && doubleStr[2] == 0) {
+    doubleStr[0] = C_ZERO;
+    doubleStr[1] = 0;
+    return;
+  }
+
+  if (singleNumInfo.pointFlag && singleNumInfo.startPos > 0) {
+    if (keepLeadingZero) {
+      if (doubleStr[0] == C_MINUS && doubleStr[1] == C_ZERO && doubleStr[2] == C_POINT) {
+        int32_t idxDS1 = 0;
+        int32_t idxDS2 = 2;
+        doubleStr[0] = C_ZERO;
+        idxDS1++;
+        while (idxDS2 <= singleNumInfo.endPos) {
+          doubleStr[idxDS1] = doubleStr[idxDS2];
+          idxDS1++;
+          idxDS2++;
+        }
+        doubleStr[idxDS1] = 0;
+      }
+      return;
+    }
+
+    int32_t idxDS1 = singleNumInfo.signedFlag ? 1 : 0;
+    int32_t idxDS2 = singleNumInfo.startPos;
+    while (idxDS2 <= singleNumInfo.endPos) {
+      doubleStr[idxDS1] = doubleStr[idxDS2];
+      idxDS1++;
+      idxDS2++;
+    }
+    doubleStr[idxDS1] = 0;
+  }
+}
+
+void singleDoubleDeal(double number, char *doubleStr, int32_t dstLen, int32_t pPerc = 6, bool keepLeadingZero = true) {
+  SingleNumInfo singleNumInfo = {false, false, 0, 0};
+  singleNumInfo.signedFlag = number < 0 ? true : false;
+  dstLen = dstLen < MAX_SINGLEDOUBLE_LENGTH ? dstLen : MAX_SINGLEDOUBLE_LENGTH;
+  if (FLAGS_accurate_double_enable) {
+    char numStr[MAX_TMP_SPACE];
+    memset(numStr, 0, sizeof(numStr));
+    int slen = snprintf(numStr, sizeof(numStr), "%+.*lf", pPerc, number);
+    if (slen < 0) {
+      throw std::runtime_error("snprintf error in singleDoubleDeal");
+    }
+
+    int32_t intLen = 0;
+    int idx = (numStr[0] == '+' || numStr[0] == '-') ? 1 : 0;
+    for (; numStr[idx] != 0 && numStr[idx] != '.'; idx++) {
+      if (numStr[idx] >= '0' && numStr[idx] <= '9') {
+        intLen++;
+      }
+    }
+
+    if (intLen == 1 && numStr[(numStr[0] == '+' || numStr[0] == '-') ? 1 : 0] == '0') {
+      intLen = 0;
+    }
+
+    int32_t tmpLen = (15 - intLen) > 0 ? (15 - intLen) : pPerc;
+    tmpLen = pPerc < tmpLen ? pPerc : tmpLen;
+    slen = snprintf(doubleStr, dstLen, "%.*lf", tmpLen, number);
+    if (slen < 0) {
+      throw std::runtime_error("snprintf error in singleDoubleDeal");
+    }
+  } else {
+    int slen = snprintf(doubleStr, dstLen, "%.*lf", pPerc, number);
+    if (slen < 0) {
+      throw std::runtime_error("snprintf error in singleDoubleDeal");
+    }
+  }
+
+  singlePrecisionDeal(doubleStr, singleNumInfo);
+  tailZeroDeal(doubleStr, singleNumInfo);
+  headZeroDeal(doubleStr, singleNumInfo, keepLeadingZero);
+}
+
+int32_t castDoubleToString(double value, char *dst, int32_t dstLen, bool keepLeadingZero) {
+  if (dst == nullptr || dstLen <= 0) {
+    throw std::invalid_argument("Destination buffer is null or size is invalid");
+  }
+
+  memset(dst, 0, dstLen);
+  singleDoubleDeal(value, dst, dstLen, 15, keepLeadingZero);
+  return strlen(dst);
 }
 
 }  // namespace dingodb::expr::calc

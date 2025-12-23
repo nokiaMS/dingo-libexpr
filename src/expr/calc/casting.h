@@ -102,6 +102,8 @@ int64_t CastCheck(float v);
 template <>
 int64_t CastCheck(double v);
 
+int32_t castDoubleToString(double value, char *dst, int32_t dstLen, bool keepLeadingZero = true);
+
 }  // namespace dingodb::expr::calc
 
 #endif /* _EXPR_CALC_CASTING_H_ */
