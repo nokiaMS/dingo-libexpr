@@ -185,7 +185,9 @@ String Cast(float v) {
 
 template <>
 String Cast(double v) {
-  return CastF(v);
+  char buffer[64];
+  int len = castDoubleToString(v, buffer, sizeof(buffer), true);
+  return String(std::string(buffer, len));
 }
 
 template <>
@@ -430,7 +432,7 @@ int32_t castDoubleToString(double value, char *dst, int32_t dstLen, bool keepLea
   }
 
   memset(dst, 0, dstLen);
-  singleDoubleDeal(value, dst, dstLen, 15, keepLeadingZero);
+  singleDoubleDeal(value, dst, dstLen, 18, keepLeadingZero);
   return strlen(dst);
 }
 
