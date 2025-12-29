@@ -1629,7 +1629,14 @@ String Cast(double v) {
 
 template <>
 String Cast(DecimalP v) {
-  return v->toString();
+  long precision = v.getDecimalPrecision();
+  long scale = v.getDecimalScale();
+
+  if (precision > 0 && scale >= 0) {
+    return v->toString(precision, scale);
+  } else {
+    return v->toString();
+  }
 }
 
 template <>

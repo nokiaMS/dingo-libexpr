@@ -47,7 +47,19 @@ class Decimal {
    * constructor.
    * @param var The value presented by string.
    */
+  void decimal_internal(const std::string & var);
+
+  /**
+   * constructor.
+   * @param var The value presented by string.
+   */
   Decimal(const std::string & var);
+
+  /**
+   * constructor.
+   * @param var The value presented by string.
+   */
+  Decimal(const std::string & var, long precison, long scale);
 
   /**
    * constructor.
@@ -326,8 +338,39 @@ class Decimal {
     /**
      * Print decimal as string.
      */
-      void printDecimal() const;
+    void printDecimal() const;
+
+    /**
+     * Get precision.
+     */
+    long getDecimalPrecision() const {
+      return precision;
+    }
+
+    /**
+     * Get scale.
+     */
+    long getDecimalScale() const {
+      return scale;
+    }
+
+  /**
+ * Print decimal as string.
+ */
+  void setDecimalPrecision(long v) {
+      precision = v;
+    }
+
+  /**
+   * Print decimal as string.
+   */
+  void setDecimalScale(long v) {
+      scale = v;
+    }
+
  private:
+  long precision;
+  long scale;
   mpf_class v;
 
   /**

@@ -77,6 +77,22 @@ class DecimalP {
     return std::move(m_ptr->toString());
   }
 
+  const long getDecimalPrecision() {
+    return m_ptr->getDecimalPrecision();
+  }
+
+  const long getDecimalScale() {
+    return m_ptr->getDecimalScale();
+  }
+
+  void setDecimalPrecision(long v) {
+    return m_ptr->setDecimalPrecision(v);
+  }
+
+  void setDecimalScale(long v) {
+    return m_ptr->setDecimalScale(v);
+  }
+
   DecimalP operator+(const DecimalP &v) const {
     return *m_ptr + *v.m_ptr;
   }

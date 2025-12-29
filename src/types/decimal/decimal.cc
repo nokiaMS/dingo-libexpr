@@ -28,7 +28,7 @@ namespace types {
 #define SHOW_EXCEPTION_INFO
 #endif
 
-Decimal::Decimal(const std::string & var) {
+void Decimal::decimal_internal(const std::string & var) {
   try {
     int i = 0;
     bool followingE = false;
@@ -44,7 +44,7 @@ Decimal::Decimal(const std::string & var) {
         && var[i] != '-' && var[i] != '+'
         && (var[i] < 0x30 || var[i] > 0x39)) {
         break;
-      }
+        }
     }
 
     if (i == 0) {
@@ -59,6 +59,16 @@ Decimal::Decimal(const std::string & var) {
                             "Decimal value info - str: " + v.get_str(exp) + " expr: " + std::to_string(exp);
     throw std::runtime_error(error_info);
   }
+}
+
+Decimal::Decimal(const std::string & var) {
+  decimal_internal(var);
+}
+
+Decimal::Decimal(const std::string & var, long precision, long scale) {
+  decimal_internal(var);
+  this->precision = precision;
+  this->scale = scale;
 }
 
 Decimal::Decimal(const char * var) : v(mpf_class(var, MAX_PRECISION, BASE)) {
