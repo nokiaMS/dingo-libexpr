@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include "decimal.h"
 
 namespace dingodb {
@@ -54,9 +55,17 @@ void Decimal::decimal_internal(const std::string & var) {
     }
     PRINT_DECIMAL;
   } catch (const std::invalid_argument& e) {
-    mp_exp_t exp;
-    std::string error_info = "Exception in function: " + std::string(__func__) + ", " + std::string(e.what()) + ", " +
-                            "Decimal value info - str: " + v.get_str(exp) + " expr: " + std::to_string(exp);
+    std::ostringstream ss;
+    ss << std::hex << std::setfill('0');
+    bool first = true;
+    for (unsigned char c : var) {
+      if (!first) ss << " ";
+      first = false;
+      ss << std::setw(2) << static_cast<int>(c);
+    }
+
+    std::string error_info = "Invalid argument exception in Decimal constructor: " + std::string(e.what()) +
+      ", input string len: " + std::to_string(var.length()) + ", input string value: " + ss.str();
     throw std::runtime_error(error_info);
   }
 }
