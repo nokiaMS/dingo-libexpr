@@ -54,9 +54,8 @@ void Decimal::decimal_internal(const std::string & var) {
     }
     PRINT_DECIMAL;
   } catch (const std::invalid_argument& e) {
-    mp_exp_t exp;
-    std::string error_info = "Exception in function: " + std::string(__func__) + ", " + std::string(e.what()) + ", " +
-                            "Decimal value info - str: " + v.get_str(exp) + " expr: " + std::to_string(exp);
+    std::string error_info = "Exception in function: " + std::string(__func__) + ", "
+      + std::string(e.what()) + ", input: " + var;
     throw std::runtime_error(error_info);
   }
 }
