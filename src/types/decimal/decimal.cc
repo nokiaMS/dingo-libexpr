@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include "decimal.h"
 
 namespace dingodb {
@@ -54,8 +55,14 @@ void Decimal::decimal_internal(const std::string & var) {
     }
     PRINT_DECIMAL;
   } catch (const std::invalid_argument& e) {
+
+    std::stringstream ss;
+    for (const auto& ch : var) {
+      ss << std::setw(2) << std::setfill('0') << std::hex << static_cast<int>(static_cast<unsigned char>(ch));
+    }
+
     std::string error_info = "Exception in function: " + std::string(__func__) + ", "
-      + std::string(e.what()) + ", input: " + var;
+      + std::string(e.what()) + ", len: " + std::to_string(ss.str().length()) + ", input: " + ss.str();
     throw std::runtime_error(error_info);
   }
 }
